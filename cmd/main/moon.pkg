@@ -1,0 +1,7 @@
+// import {
+//   "OrisGo/nestedtext" @lib,
+// }
+
+options(
+  "is-main": true,
+)
