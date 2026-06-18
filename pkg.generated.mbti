@@ -1,0 +1,64 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "OrisGo/nestedtext"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn loads(String, Top) -> Result[Value?, NestedTextError]
+
+// Errors
+
+// Types and methods
+pub(all) enum ErrorKind {
+  InvalidIndentation
+  TabInIndentation
+  UnrecognizedLine
+  UnexpectedLineType
+  DuplicateKey
+  InvalidIndentLevel
+  UnterminatedInlineList
+  UnterminatedInlineDict
+  InvalidInlineCharacter
+  TrailingContent
+} derive(Eq, @debug.Debug)
+
+pub(all) struct NestedTextError {
+  kind : ErrorKind
+  message : String
+  lineno : Int?
+  colno : Int?
+  line : String?
+} derive(Eq, @debug.Debug)
+pub fn NestedTextError::at(ErrorKind, String, Int, Int, String) -> Self
+pub fn NestedTextError::new(ErrorKind, String) -> Self
+pub fn NestedTextError::to_string(Self) -> String
+pub fn NestedTextError::with_colno(Self, Int) -> Self
+pub fn NestedTextError::with_line(Self, String) -> Self
+pub fn NestedTextError::with_lineno(Self, Int) -> Self
+
+pub(all) enum Top {
+  Dict
+  List
+  String
+  Any
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Value {
+  String(String)
+  List(Array[Value])
+  Dict(Array[(String, Value)])
+} derive(Eq, @debug.Debug)
+pub fn Value::as_dict(Self) -> Array[(String, Self)]?
+pub fn Value::as_list(Self) -> Array[Self]?
+pub fn Value::as_string(Self) -> String?
+pub fn Value::get(Self, String) -> Self?
+pub fn Value::is_dict(Self) -> Bool
+pub fn Value::is_list(Self) -> Bool
+pub fn Value::is_string(Self) -> Bool
+
+// Type aliases
+
+// Traits
+
