@@ -215,13 +215,35 @@ fn classify_line(
 }
 
 ///|
+
+///|
+/// Strip trailing whitespace including NBSP (NO-BREAK SPACE U+00A0).
+/// MoonBit's trim_end does not treat NBSP as whitespace.
+fn strip_trailing_ws(s : String) -> String {
+  if s.is_empty() {
+    return s
+  }
+  let mut end = s.length()
+  while end > 0 {
+    let ch = s[end - 1]
+    if ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n' || ch == '\u{00A0}' {
+      end -= 1
+    } else {
+      break
+    }
+  }
+  if end == s.length() {
+    s
+  } else {
+    s.unsafe_substring(start=0, end~)
+  }
+}
+
+///|
 fn try_parse_dict_item(rest : String) -> (String, String)? {
   match rest.find(": ") {
     Some(colon_pos) => {
-      let key = rest
-        .unsafe_substring(start=0, end=colon_pos)
-        .trim_end()
-        .to_owned()
+      let key = strip_trailing_ws(rest.unsafe_substring(start=0, end=colon_pos))
       let value = rest.unsafe_substring(start=colon_pos + 2, end=rest.length())
       if key.is_empty() {
         None
@@ -231,10 +253,9 @@ fn try_parse_dict_item(rest : String) -> (String, String)? {
     }
     None =>
       if rest.has_suffix(":") {
-        let key = rest
-          .unsafe_substring(start=0, end=rest.length() - 1)
-          .trim_end()
-          .to_owned()
+        let key = strip_trailing_ws(
+          rest.unsafe_substring(start=0, end=rest.length() - 1),
+        )
         if key.is_empty() {
           None
         } else {

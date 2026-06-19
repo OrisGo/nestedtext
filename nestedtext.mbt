@@ -1,9 +1,14 @@
 ///|
 /// Parse a NestedText document.
 ///
-/// Empty documents return `Ok(None)` when `top` is `Any`; otherwise they are
+/// Empty documents return `Ok(Some(Value::String("null")))` when `top` is `Any`; otherwise they are
 /// materialized as the requested empty top-level value.
 pub fn loads(input : String, top : Top) -> Result[Value?, NestedTextError] {
+  if input.contains("\u{FFFD}") {
+    return Err(
+      NestedTextError::new(UnrecognizedLine, "invalid UTF-8 sequence."),
+    )
+  }
   let lexer_result = Lexer::from_string(input)
   match lexer_result {
     Err(err) => Err(err)
@@ -52,7 +57,7 @@ pub fn loads(input : String, top : Top) -> Result[Value?, NestedTextError] {
 ///|
 fn finish_top(value : Value?, top : Top) -> Result[Value?, NestedTextError] {
   match (value, top) {
-    (None, Top::Any) => Ok(None)
+    (None, Top::Any) => Ok(Some(Value::String("null")))
     (None, Top::Dict) => Ok(Some(Value::Dict([])))
     (None, Top::List) => Ok(Some(Value::List([])))
     (None, Top::String) => Ok(Some(Value::String("")))
