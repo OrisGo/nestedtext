@@ -1,9 +1,8 @@
-﻿# OrisGo/nestedtext
+# OrisGo/nestedtext
 
 NestedText serialization format parser and emitter implemented in MoonBit.
 
-> **Notice**: This project is a MoonBit port of the Rust [
-ested-text](https://github.com/hansstimer/nested-text) crate. It inherits the Apache-2.0 OR MIT dual license.
+> **Notice**: This project is a MoonBit port of the Rust [nested-text](https://github.com/hansstimer/nested-text) crate. It inherits the Apache-2.0 OR MIT dual license.
 
 ## Introduction
 
@@ -22,7 +21,7 @@ This library brings support for the [NestedText](https://nestedtext.org/) serial
 
 ### Parse
 
-`mbt
+```mbt
 ///|
 test "parse a NestedText dictionary" {
   let input = "name: Alice\nage: 30"
@@ -39,11 +38,11 @@ test "parse a NestedText dictionary" {
     _ => fail("parse failed")
   }
 }
-`
+```
 
 ### Serialize
 
-`mbt
+```mbt
 ///|
 test "serialize a Value to NestedText" {
   let value = @nestedtext.Value::Dict([
@@ -53,11 +52,11 @@ test "serialize a Value to NestedText" {
   let output = @nestedtext.dumps(value, @nestedtext.DumpOptions::default())
   assert_eq(output, "name: Alice\nage: 30\n")
 }
-`
+```
 
 ### Roundtrip
 
-`mbt
+```mbt
 ///|
 test "roundtrip: loads -> dumps -> loads" {
   let input = "name: Alice\nage: 30"
@@ -72,15 +71,14 @@ test "roundtrip: loads -> dumps -> loads" {
     _ => fail("parse failed")
   }
 }
-`
+```
 
 ## TODO
 
-- Port the official NestedText load tests from 	ests.json.
 - Match official error message wording and line/column metadata case by case.
 - Add serde-like deserialization adapter.
 - Add CLI tool.
 
 ## License
 
-This project is dually licensed under the MIT License and the Apache License, Version 2.0. See LICENSE, LICENSE-MIT, and LICENSE-APACHE for details.
+This project is dually licensed under the MIT License and the Apache License, Version 2.0. See `LICENSE`, `LICENSE-MIT`, and `LICENSE-APACHE` for details.
