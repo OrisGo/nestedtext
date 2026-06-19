@@ -46,10 +46,7 @@ fn Lexer::from_string(input : String) -> Result[Lexer, NestedTextError] {
     if rest.is_empty() || rest.has_prefix("#") {
       continue
     }
-    match classify_line(rest, depth, lineno, raw) {
-      Err(err) => return Err(err)
-      Ok(line) => lines.push(line)
-    }
+    lines.push(classify_line(rest, depth, lineno, raw))
   }
   Ok({ lines, pos: 0 })
 }
@@ -136,21 +133,21 @@ fn classify_line(
   depth : Int,
   lineno : Int,
   raw : String,
-) -> Result[Line, NestedTextError] {
+) -> Line {
   if rest.has_prefix("- ") || rest == "-" {
     let value = if rest == "-" {
       ""
     } else {
       rest.unsafe_substring(start=2, end=rest.length())
     }
-    return Ok({
+    return {
       kind: ListItem,
       lineno,
       depth,
       key: None,
       value: Some(value),
       text: raw,
-    })
+    }
   }
   if rest.has_prefix("> ") || rest == ">" {
     let value = if rest == ">" {
@@ -158,14 +155,14 @@ fn classify_line(
     } else {
       rest.unsafe_substring(start=2, end=rest.length())
     }
-    return Ok({
+    return {
       kind: StringItem,
       lineno,
       depth,
       key: None,
       value: Some(value),
       text: raw,
-    })
+    }
   }
   if rest.has_prefix(": ") || rest == ":" {
     let value = if rest == ":" {
@@ -173,54 +170,47 @@ fn classify_line(
     } else {
       rest.unsafe_substring(start=2, end=rest.length())
     }
-    return Ok({
+    return {
       kind: KeyItem,
       lineno,
       depth,
       key: None,
       value: Some(value),
       text: raw,
-    })
+    }
   }
   if rest.has_prefix("[") {
-    return Ok({
+    return {
       kind: InlineList,
       lineno,
       depth,
       key: None,
       value: Some(rest),
       text: raw,
-    })
+    }
   }
   if rest.has_prefix("{") {
-    return Ok({
+    return {
       kind: InlineDict,
       lineno,
       depth,
       key: None,
       value: Some(rest),
       text: raw,
-    })
+    }
   }
   match try_parse_dict_item(rest) {
     Some((key, value)) =>
-      Ok({
+      {
         kind: DictItem,
         lineno,
         depth,
         key: Some(key),
         value: Some(value),
         text: raw,
-      })
+      }
     None =>
-      Ok({
-        kind: Unrecognized,
-        lineno,
-        depth,
-        key: None,
-        value: None,
-        text: raw,
-      })
+      { kind: Unrecognized, lineno, depth, key: None, value: None, text: raw }
   }
 }
 
