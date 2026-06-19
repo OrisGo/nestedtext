@@ -6,11 +6,19 @@ import {
 }
 
 // Values
+pub fn dumps(Value, DumpOptions) -> String
+
 pub fn loads(String, Top) -> Result[Value?, NestedTextError]
 
 // Errors
 
 // Types and methods
+pub(all) struct DumpOptions {
+  indent : Int
+  sort_keys : Bool
+} derive(@debug.Debug)
+pub fn DumpOptions::default() -> Self
+
 pub(all) enum ErrorKind {
   InvalidIndentation
   TabInIndentation
