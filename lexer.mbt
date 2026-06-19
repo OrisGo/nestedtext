@@ -38,7 +38,7 @@ fn Lexer::from_string(input : String) -> Result[Lexer, NestedTextError] {
   for lineno, raw_view in normalized.split("\n") {
     let raw = raw_view.to_owned()
     let depth = count_leading_spaces(raw)
-    match check_indentation(raw, lineno) {
+    match check_indentation(raw, lineno + 1) {
       Some(err) => return Err(err)
       None => ()
     }
@@ -46,7 +46,7 @@ fn Lexer::from_string(input : String) -> Result[Lexer, NestedTextError] {
     if rest.is_empty() || rest.has_prefix("#") {
       continue
     }
-    lines.push(classify_line(rest, depth, lineno, raw))
+    lines.push(classify_line(rest, depth, lineno + 1, raw))
   }
   Ok({ lines, pos: 0 })
 }
@@ -100,7 +100,7 @@ fn check_indentation(raw : String, lineno : Int) -> NestedTextError? {
           TabInIndentation,
           "invalid character in indentation: '\\t'.",
           lineno,
-          colno,
+          colno + 1,
           raw,
         ),
       )
@@ -116,7 +116,7 @@ fn check_indentation(raw : String, lineno : Int) -> NestedTextError? {
           InvalidIndentation,
           "invalid character in indentation: \{desc}",
           lineno,
-          colno,
+          colno + 1,
           raw,
         ),
       )

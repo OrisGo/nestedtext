@@ -27,7 +27,7 @@ fn Parser::read_value(
               InvalidIndentLevel,
               "top-level content must start in column 1.",
               line.lineno,
-              0,
+              1,
               line.text,
             ),
           )
@@ -38,7 +38,7 @@ fn Parser::read_value(
               InvalidIndentLevel,
               "invalid indentation, partial dedent.",
               line.lineno,
-              0,
+              1,
               line.text,
             ),
           )
@@ -48,7 +48,7 @@ fn Parser::read_value(
               InvalidIndentLevel,
               "invalid indentation.",
               line.lineno,
-              line.depth,
+              line.depth + 1,
               line.text,
             ),
           )
@@ -80,7 +80,7 @@ fn Parser::read_value(
                 UnrecognizedLine,
                 "unrecognized line.",
                 line.lineno,
-                line.depth,
+                line.depth + 1,
                 line.text,
               ),
             )
@@ -113,7 +113,7 @@ fn Parser::read_dict(
                     DuplicateKey,
                     "duplicate key: \{key}.",
                     consumed.lineno,
-                    0,
+                    1,
                     consumed.text,
                   ),
                 )
@@ -161,7 +161,7 @@ fn Parser::read_dict(
                         InvalidIndentLevel,
                         "multiline key requires a value.",
                         first_key_lineno,
-                        depth,
+                        depth + 1,
                         first_key_text,
                       ),
                     )
@@ -183,7 +183,7 @@ fn Parser::read_dict(
                   UnexpectedLineType,
                   "expected dictionary item.",
                   line.lineno,
-                  line.depth,
+                  line.depth + 1,
                   line.text,
                 ),
               )
@@ -227,7 +227,7 @@ fn Parser::read_list(
               UnexpectedLineType,
               "expected list item.",
               line.lineno,
-              line.depth,
+              line.depth + 1,
               line.text,
             ),
           )
@@ -256,7 +256,7 @@ fn Parser::read_string(
             InvalidIndentLevel,
             "invalid indentation.",
             next.lineno,
-            depth,
+            depth + 1,
             next.text,
           ),
         )
@@ -316,7 +316,7 @@ fn Parser::check_no_indented_content(
             InvalidIndentLevel,
             "invalid indentation.",
             next.lineno,
-            parent_depth,
+            parent_depth + 1,
             next.text,
           ),
         )

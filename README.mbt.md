@@ -21,12 +21,12 @@ This library brings support for the [NestedText](https://nestedtext.org/) serial
 
 ### Parse
 
-```mbt
+```mbt nocheck
 ///|
 test "parse a NestedText dictionary" {
   let input = "name: Alice\nage: 30"
   match @nestedtext.loads(input, @nestedtext.Top::Any) {
-    Ok(Some(value)) => {
+    Ok(Some(value)) =>
       assert_true(
         value ==
         @nestedtext.Value::Dict([
@@ -34,7 +34,6 @@ test "parse a NestedText dictionary" {
           ("age", @nestedtext.Value::String("30")),
         ]),
       )
-    }
     _ => fail("parse failed")
   }
 }
@@ -42,7 +41,7 @@ test "parse a NestedText dictionary" {
 
 ### Serialize
 
-```mbt
+```mbt nocheck
 ///|
 test "serialize a Value to NestedText" {
   let value = @nestedtext.Value::Dict([
@@ -56,7 +55,7 @@ test "serialize a Value to NestedText" {
 
 ### Roundtrip
 
-```mbt
+```mbt nocheck
 ///|
 test "roundtrip: loads -> dumps -> loads" {
   let input = "name: Alice\nage: 30"

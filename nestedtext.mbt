@@ -30,7 +30,7 @@ pub fn loads(input : String, top : Top) -> Result[Value?, NestedTextError] {
                         InvalidIndentLevel,
                         "invalid indentation, partial dedent.",
                         line.lineno,
-                        0,
+                        1,
                         line.text,
                       ),
                     )
@@ -40,7 +40,7 @@ pub fn loads(input : String, top : Top) -> Result[Value?, NestedTextError] {
                         UnexpectedLineType,
                         "extra content.",
                         line.lineno,
-                        0,
+                        1,
                         line.text,
                       ),
                     )

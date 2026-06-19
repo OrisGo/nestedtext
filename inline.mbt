@@ -251,7 +251,7 @@ fn InlineParser::error(
     kind,
     message,
     self.lineno,
-    self.colno_offset + self.pos,
+    self.colno_offset + self.pos + 1,
     self.line_text,
   )
 }
