@@ -26,9 +26,9 @@ fn InlineParser::parse(
         )
         let trimmed = trailing.trim().to_owned()
         let msg = if trimmed.char_length() == 1 {
-          "extra character after closing delimiter: \u{2018}\{trimmed}\u{2019}."
+          "extra character after closing delimiter: '\{trimmed}'."
         } else {
-          "extra characters after closing delimiter: \u{2018}\{trimmed}\u{2019}."
+          "extra characters after closing delimiter: '\{trimmed}'."
         }
         Err(parser.error(TrailingContent, msg))
       } else {
@@ -49,7 +49,7 @@ fn InlineParser::parse_value(
       Err(
         self.error(
           InvalidInlineCharacter,
-          "expected \u{2018}[\u{2019} or \u{2018}{\u{2019}.",
+          "expected '[' or '{'.",
         ),
       )
   }
@@ -90,7 +90,7 @@ fn InlineParser::parse_list(
         return Err(
           self.error(
             InvalidInlineCharacter,
-            "expected \u{2018},\u{2019} or \u{2018}]\u{2019}, found \u{2018}\{c}\u{2019}.",
+            "expected ',' or ']', found '\{c}'.",
           ),
         )
       None =>
@@ -124,7 +124,7 @@ fn InlineParser::parse_dict(
         return Err(
           self.error(
             InvalidInlineCharacter,
-            "expected \u{2018}:\u{2019}, found \u{2018}\{c}\u{2019}.",
+            "expected ':', found '\{c}'.",
           ),
         )
       None =>
@@ -169,7 +169,7 @@ fn InlineParser::parse_dict(
         return Err(
           self.error(
             InvalidInlineCharacter,
-            "expected \u{2018},\u{2019} or \u{2018}}\u{2019}, found \u{2018}\{c}\u{2019}.",
+            "expected ',' or '}', found '\{c}'.",
           ),
         )
       None =>

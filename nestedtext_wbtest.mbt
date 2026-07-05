@@ -5,7 +5,7 @@ test "lexer skips blank lines and comments" {
       match lexer.peek() {
         Some(line) => {
           assert_true(line.kind == DictItem)
-          assert_eq(line.depth, 0)
+          @debug.assert_eq(line.depth, 0)
           assert_true(line.key == Some("key"))
           assert_true(line.value == Some("value"))
         }

@@ -15,7 +15,23 @@ This library brings support for the [NestedText](https://nestedtext.org/) serial
 - [x] Parser (basic block dictionaries, lists, multiline strings, multiline keys, inline values)
 - [x] Emitter (dumps, DumpOptions, render helpers)
 - [x] Test suite integration (25 tests: 6 parsing + 17 serialization + 2 roundtrip)
-- [x] Official compliance test suite: 173 tests passing as of 2026-06-20
+- [x] Official compliance test suite: 173 tests passing as of 2026-07-06
+- [x] Error message wording and line/column metadata aligned with official spec
+- [x] Compliance tests now assert specific error details (message, lineno, colno, line)
+
+## Important: Encoding
+
+NestedText documents MUST be valid UTF-8. The `loads` function takes a `String`, which in MoonBit is always UTF-8 encoded. If you pass binary data that contains invalid UTF-8 byte sequences, MoonBit will replace those bytes with the replacement character (U+FFFD) before our parser sees them. In that case `loads` returns an error with the message `"input contains invalid UTF-8"` and indicates the location of the first replacement character.
+
+When reading from a file, decode it as UTF-8 first:
+
+```mbt
+let content = @fs.read_file_to_string("config.nt", encoding="utf-8")
+match @nestedtext.loads(content, @nestedtext.Top::Any) {
+  Ok(value) => // ...
+  Err(err) => // handle encoding or parse error
+}
+```
 
 ## Usage
 
@@ -74,7 +90,6 @@ test "roundtrip: loads -> dumps -> loads" {
 
 ## TODO
 
-- Match official error message wording and line/column metadata case by case.
 - Add serde-like deserialization adapter.
 - Add CLI tool.
 

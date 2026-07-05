@@ -40,7 +40,7 @@ test "loads nested list under dictionary" {
 test "reports indentation location" {
   match @nestedtext.loads("  key: value", @nestedtext.Top::Any) {
     Err(err) => {
-      assert_eq(err.message, "top-level content must start in column 1.")
+      @debug.assert_eq(err.message, "top-level content must start in column 1.")
       assert_true(err.lineno == Some(1))
       assert_true(err.colno == Some(1))
     }

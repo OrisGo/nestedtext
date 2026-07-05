@@ -914,7 +914,12 @@ test "compliance: unlearn" {
 ///|
 test "compliance error: amnesty" {
   match @nestedtext.loads("treasurer:\n    name: Fumiko Purvis\n    address: Home\n        > 3636 Buffalo Ave\n        > Topeka, Kansas 20692", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(4))
+      @debug.assert_eq(e.colno, Some(5))
+      @debug.assert_eq(e.message, "invalid indentation.")
+      @debug.assert_eq(e.line, Some("        > 3636 Buffalo Ave"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -922,7 +927,12 @@ test "compliance error: amnesty" {
 ///|
 test "compliance error: subdue" {
   match @nestedtext.loads("treasurer:\n    name: Fumiko Purvis\n    address:  \n        > 3636 Buffalo Ave\n        > Topeka, Kansas 20692", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(4))
+      @debug.assert_eq(e.colno, Some(5))
+      @debug.assert_eq(e.message, "invalid indentation.")
+      @debug.assert_eq(e.line, Some("        > 3636 Buffalo Ave"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -930,7 +940,11 @@ test "compliance error: subdue" {
 ///|
 test "compliance error: balloon" {
   match @nestedtext.loads(":", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(1))
+      @debug.assert_eq(e.message, "indented value must follow multiline key.")
+      @debug.assert_eq(e.line, Some(":"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -938,7 +952,11 @@ test "compliance error: balloon" {
 ///|
 test "compliance error: lolly" {
   match @nestedtext.loads(":\n    :", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.message, "indented value must follow multiline key.")
+      @debug.assert_eq(e.line, Some("    :"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1165,7 +1183,12 @@ test "compliance: beset" {
 ///|
 test "compliance error: gendarme" {
   match @nestedtext.loads("ingredients:\n  > green chilies\n    > red chilies", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(3))
+      @debug.assert_eq(e.colno, Some(3))
+      @debug.assert_eq(e.message, "invalid indentation.")
+      @debug.assert_eq(e.line, Some("    > red chilies"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1173,7 +1196,12 @@ test "compliance error: gendarme" {
 ///|
 test "compliance error: sketchy" {
   match @nestedtext.loads("     > green chilies\n     > red chilies", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(1))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "top-level content must start in column 1.")
+      @debug.assert_eq(e.line, Some("     > green chilies"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1181,7 +1209,12 @@ test "compliance error: sketchy" {
 ///|
 test "compliance error: prankster" {
   match @nestedtext.loads("ingredients:\n\t> green chilies\n\t> red chilies", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "invalid character in indentation: '\\t'.")
+      @debug.assert_eq(e.line, Some("	> green chilies"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1189,7 +1222,12 @@ test "compliance error: prankster" {
 ///|
 test "compliance error: streamer" {
   match @nestedtext.loads("ingredients:\n        > green chilies\n        > red chilies\n#   ↑ this is a non-breaking space", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(3))
+      @debug.assert_eq(e.colno, Some(5))
+      @debug.assert_eq(e.message, "invalid character in indentation: '\\xa0' (NO-BREAK SPACE).")
+      @debug.assert_eq(e.line, Some("        > red chilies"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1268,7 +1306,12 @@ test "compliance: benchmark" {
 ///|
 test "compliance error: milligram" {
   match @nestedtext.loads("    key: value", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(1))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "top-level content must start in column 1.")
+      @debug.assert_eq(e.line, Some("    key: value"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1276,7 +1319,12 @@ test "compliance error: milligram" {
 ///|
 test "compliance error: fifth" {
   match @nestedtext.loads("key 1:  \n        # notice the extra space at the end of the above line\n\n        # that, combined with the indent in the line below is an error\n        key 2: value 2", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(5))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "invalid indentation.")
+      @debug.assert_eq(e.line, Some("        key 2: value 2"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1284,7 +1332,12 @@ test "compliance error: fifth" {
 ///|
 test "compliance error: chatterer" {
   match @nestedtext.loads("# invalid indentation, tab in indentation\nkey 1:\n    \t    key 1.1: value 1.1\n", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(3))
+      @debug.assert_eq(e.colno, Some(5))
+      @debug.assert_eq(e.message, "invalid character in indentation: '\\t'.")
+      @debug.assert_eq(e.line, Some("    	    key 1.1: value 1.1"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1292,7 +1345,12 @@ test "compliance error: chatterer" {
 ///|
 test "compliance error: concuss" {
   match @nestedtext.loads("ingredients:\n- green chilies", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "expected dictionary item.")
+      @debug.assert_eq(e.line, Some("- green chilies"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1300,7 +1358,12 @@ test "compliance error: concuss" {
 ///|
 test "compliance error: marinade" {
   match @nestedtext.loads("ingredients:\n  - green chilies\n    - red chilies", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(3))
+      @debug.assert_eq(e.colno, Some(3))
+      @debug.assert_eq(e.message, "invalid indentation.")
+      @debug.assert_eq(e.line, Some("    - red chilies"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1308,7 +1371,12 @@ test "compliance error: marinade" {
 ///|
 test "compliance error: detract" {
   match @nestedtext.loads("candidates:\n    name:\n  phone:", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(3))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "invalid indentation, partial dedent.")
+      @debug.assert_eq(e.line, Some("  phone:"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1316,7 +1384,12 @@ test "compliance error: detract" {
 ///|
 test "compliance error: silky" {
   match @nestedtext.loads("ingredients:\n    - green chilies\n  - red chilies", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(3))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "invalid indentation, partial dedent.")
+      @debug.assert_eq(e.line, Some("  - red chilies"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1324,7 +1397,12 @@ test "compliance error: silky" {
 ///|
 test "compliance error: matinee" {
   match @nestedtext.loads("ingredients: red chilies\n- green chilies", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "expected dictionary item.")
+      @debug.assert_eq(e.line, Some("- green chilies"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1332,7 +1410,12 @@ test "compliance error: matinee" {
 ///|
 test "compliance error: slipknot" {
   match @nestedtext.loads("ingredients:\n    green chilies", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(5))
+      @debug.assert_eq(e.message, "unrecognized line.")
+      @debug.assert_eq(e.line, Some("    green chilies"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1340,7 +1423,12 @@ test "compliance error: slipknot" {
 ///|
 test "compliance error: facet" {
   match @nestedtext.loads("key: value 1\nkey: value 2", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "duplicate key: key.")
+      @debug.assert_eq(e.line, Some("key: value 2"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1348,7 +1436,12 @@ test "compliance error: facet" {
 ///|
 test "compliance error: smudge" {
   match @nestedtext.loads("key:\n    \t    > first line\n    \t    > second line", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(5))
+      @debug.assert_eq(e.message, "invalid character in indentation: '\\t'.")
+      @debug.assert_eq(e.line, Some("    	    > first line"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1568,7 +1661,12 @@ test "compliance: crumbly" {
 ///|
 test "compliance error: despair" {
   match @nestedtext.loads("A :\n : B:\n: C :\nD :\n: E", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(2))
+      @debug.assert_eq(e.message, "multiline key requires a value.")
+      @debug.assert_eq(e.line, Some(" : B:"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -1942,7 +2040,12 @@ test "compliance: imbibe" {
 ///|
 test "compliance error: emollient" {
   match @nestedtext.loads("key: value 1\nkey: value 2\nkey: value 3", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "duplicate key: key.")
+      @debug.assert_eq(e.line, Some("key: value 2"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2148,7 +2251,12 @@ test "compliance: modernize" {
 ///|
 test "compliance error: baptism" {
   match @nestedtext.loads("-\n    {a}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "expected ':', found '}'.")
+      @debug.assert_eq(e.line, Some("    {a}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2156,7 +2264,12 @@ test "compliance error: baptism" {
 ///|
 test "compliance error: collate" {
   match @nestedtext.loads("-\n    {", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(6))
+      @debug.assert_eq(e.message, "line ended without closing delimiter.")
+      @debug.assert_eq(e.line, Some("    {"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2164,7 +2277,12 @@ test "compliance error: collate" {
 ///|
 test "compliance error: ballroom" {
   match @nestedtext.loads("-\n    {{}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(6))
+      @debug.assert_eq(e.message, "expected ':', found '{'.")
+      @debug.assert_eq(e.line, Some("    {{}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2172,7 +2290,12 @@ test "compliance error: ballroom" {
 ///|
 test "compliance error: mercy" {
   match @nestedtext.loads("-\n    {}}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "extra character after closing delimiter: '}'.")
+      @debug.assert_eq(e.line, Some("    {}}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2180,7 +2303,12 @@ test "compliance error: mercy" {
 ///|
 test "compliance error: canto" {
   match @nestedtext.loads("-\n    {a,:b}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "expected ':', found ','.")
+      @debug.assert_eq(e.line, Some("    {a,:b}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2188,7 +2316,12 @@ test "compliance error: canto" {
 ///|
 test "compliance error: stooge" {
   match @nestedtext.loads("-\n    {a,:b}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "expected ':', found ','.")
+      @debug.assert_eq(e.line, Some("    {a,:b}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2196,7 +2329,12 @@ test "compliance error: stooge" {
 ///|
 test "compliance error: cowboy" {
   match @nestedtext.loads("-\n    {a,:b}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "expected ':', found ','.")
+      @debug.assert_eq(e.line, Some("    {a,:b}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2204,7 +2342,12 @@ test "compliance error: cowboy" {
 ///|
 test "compliance error: criterion" {
   match @nestedtext.loads("-\n    {a}:b}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "expected ':', found '}'.")
+      @debug.assert_eq(e.line, Some("    {a}:b}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2212,7 +2355,12 @@ test "compliance error: criterion" {
 ///|
 test "compliance error: protrude" {
   match @nestedtext.loads("-\n    {a[:b}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "expected ':', found '['.")
+      @debug.assert_eq(e.line, Some("    {a[:b}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2220,7 +2368,12 @@ test "compliance error: protrude" {
 ///|
 test "compliance error: caftan" {
   match @nestedtext.loads("-\n    {a]:b}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "expected ':', found ']'.")
+      @debug.assert_eq(e.line, Some("    {a]:b}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2228,7 +2381,12 @@ test "compliance error: caftan" {
 ///|
 test "compliance error: siphon" {
   match @nestedtext.loads("-\n    {a:b{}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(9))
+      @debug.assert_eq(e.message, "expected ',' or '}', found '{'.")
+      @debug.assert_eq(e.line, Some("    {a:b{}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2236,7 +2394,12 @@ test "compliance error: siphon" {
 ///|
 test "compliance error: unpick" {
   match @nestedtext.loads("-\n    {a:b}}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(10))
+      @debug.assert_eq(e.message, "extra character after closing delimiter: '}'.")
+      @debug.assert_eq(e.line, Some("    {a:b}}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2244,7 +2407,12 @@ test "compliance error: unpick" {
 ///|
 test "compliance error: patchwork" {
   match @nestedtext.loads("-\n    {a:b[}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(9))
+      @debug.assert_eq(e.message, "expected ',' or '}', found '['.")
+      @debug.assert_eq(e.line, Some("    {a:b[}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2252,7 +2420,12 @@ test "compliance error: patchwork" {
 ///|
 test "compliance error: frustrate" {
   match @nestedtext.loads("-\n    {a:b]}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(9))
+      @debug.assert_eq(e.message, "expected ',' or '}', found ']'.")
+      @debug.assert_eq(e.line, Some("    {a:b]}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2260,7 +2433,12 @@ test "compliance error: frustrate" {
 ///|
 test "compliance error: donation" {
   match @nestedtext.loads("-\n    {a:0, , }", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(11))
+      @debug.assert_eq(e.message, "expected ':', found ','.")
+      @debug.assert_eq(e.line, Some("    {a:0, , }"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2268,7 +2446,12 @@ test "compliance error: donation" {
 ///|
 test "compliance error: flaunt" {
   match @nestedtext.loads("-\n    {a:{A:0}, b{B:1}}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(16))
+      @debug.assert_eq(e.message, "expected ':', found '{'.")
+      @debug.assert_eq(e.line, Some("    {a:{A:0}, b{B:1}}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2350,7 +2533,12 @@ test "compliance: succor" {
 ///|
 test "compliance error: raven" {
   match @nestedtext.loads("key 1:\n       {k1.1:v1.1,\t  k1.2:v1.2,      \tk1.3:v1.3,\t}\t\nkey 2:\n        {k2.1\t:v2.1,\t  k2.2\t:v2.2,      \tk2.3\t:v2.3,\t}\t\nkey 3:\n        {k3.1:\tv3.1,\t  k3.2:\tv3.2,      \tk3.3:\tv3.3,\t}\t\nkey 4:\n        {k4.1\t:\tv4.1,\t  k4.2\t:\tv4.2,      \tk4.3\t:\tv4.3,\t}\t", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(50))
+      @debug.assert_eq(e.message, "expected ':', found '}'.")
+      @debug.assert_eq(e.line, Some("       {k1.1:v1.1,	  k1.2:v1.2,      	k1.3:v1.3,	}	"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2358,7 +2546,12 @@ test "compliance error: raven" {
 ///|
 test "compliance error: emanate" {
   match @nestedtext.loads("{a:0,}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(1))
+      @debug.assert_eq(e.colno, Some(6))
+      @debug.assert_eq(e.message, "expected value.")
+      @debug.assert_eq(e.line, Some("{a:0,}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2366,7 +2559,12 @@ test "compliance error: emanate" {
 ///|
 test "compliance error: moonlight" {
   match @nestedtext.loads("{a:0, }", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(1))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "expected ':', found '}'.")
+      @debug.assert_eq(e.line, Some("{a:0, }"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2374,7 +2572,12 @@ test "compliance error: moonlight" {
 ///|
 test "compliance error: conclude" {
   match @nestedtext.loads("{a:0,:,}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(1))
+      @debug.assert_eq(e.colno, Some(8))
+      @debug.assert_eq(e.message, "expected value.")
+      @debug.assert_eq(e.line, Some("{a:0,:,}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2382,7 +2585,11 @@ test "compliance error: conclude" {
 ///|
 test "compliance error: prairie" {
   match @nestedtext.loads("{cases: {*: {*: {*:*}}}}\nchecks: *.sv", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.message, "extra content.")
+      @debug.assert_eq(e.line, Some("checks: *.sv"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2390,7 +2597,11 @@ test "compliance error: prairie" {
 ///|
 test "compliance error: botch" {
   match @nestedtext.loads("[]\nnutz: truck", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.message, "extra content.")
+      @debug.assert_eq(e.line, Some("nutz: truck"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2398,7 +2609,11 @@ test "compliance error: botch" {
 ///|
 test "compliance error: typhoon" {
   match @nestedtext.loads("{cases: {*: {*: {*:*}}}}\n    checks: *.sv", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.message, "extra content.")
+      @debug.assert_eq(e.line, Some("    checks: *.sv"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2451,7 +2666,12 @@ test "compliance: isometric" {
 ///|
 test "compliance error: seller" {
   match @nestedtext.loads("ingredients:\n  - green chilies\n  cannot mix list with: dictionary\n", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(3))
+      @debug.assert_eq(e.colno, Some(3))
+      @debug.assert_eq(e.message, "expected list item.")
+      @debug.assert_eq(e.line, Some("  cannot mix list with: dictionary"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2459,7 +2679,12 @@ test "compliance error: seller" {
 ///|
 test "compliance error: element" {
   match @nestedtext.loads("\n    - green chilies\n\n- red chilies\n", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "top-level content must start in column 1.")
+      @debug.assert_eq(e.line, Some("    - green chilies"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2467,7 +2692,12 @@ test "compliance error: element" {
 ///|
 test "compliance error: twelve" {
   match @nestedtext.loads("- green chilies\n    - red chilies\n", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "invalid indentation.")
+      @debug.assert_eq(e.line, Some("    - red chilies"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2475,7 +2705,12 @@ test "compliance error: twelve" {
 ///|
 test "compliance error: derelict" {
   match @nestedtext.loads("# this is an error because indentation is a tab\n- \n\t- red chilies", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(3))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "invalid character in indentation: '\\t'.")
+      @debug.assert_eq(e.line, Some("	- red chilies"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2694,7 +2929,12 @@ test "compliance: epoch" {
 ///|
 test "compliance error: nobleman" {
   match @nestedtext.loads("-\n    [", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(6))
+      @debug.assert_eq(e.message, "line ended without closing delimiter.")
+      @debug.assert_eq(e.line, Some("    ["))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2702,7 +2942,12 @@ test "compliance error: nobleman" {
 ///|
 test "compliance error: proverb" {
   match @nestedtext.loads("-\n    [,", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "line ended without closing delimiter.")
+      @debug.assert_eq(e.line, Some("    [,"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2710,7 +2955,12 @@ test "compliance error: proverb" {
 ///|
 test "compliance error: marina" {
   match @nestedtext.loads("-\n    [[]", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(8))
+      @debug.assert_eq(e.message, "line ended without closing delimiter.")
+      @debug.assert_eq(e.line, Some("    [[]"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2718,7 +2968,12 @@ test "compliance error: marina" {
 ///|
 test "compliance error: blister" {
   match @nestedtext.loads("-\n    []{a:0}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "extra characters after closing delimiter: '{a:0}'.")
+      @debug.assert_eq(e.line, Some("    []{a:0}"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2726,7 +2981,12 @@ test "compliance error: blister" {
 ///|
 test "compliance error: mentor" {
   match @nestedtext.loads("-\n    [a[b]", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "expected ',' or ']', found '['.")
+      @debug.assert_eq(e.line, Some("    [a[b]"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2734,7 +2994,12 @@ test "compliance error: mentor" {
 ///|
 test "compliance error: valance" {
   match @nestedtext.loads("-\n    [a]b]", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(8))
+      @debug.assert_eq(e.message, "extra characters after closing delimiter: 'b]'.")
+      @debug.assert_eq(e.line, Some("    [a]b]"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2742,7 +3007,12 @@ test "compliance error: valance" {
 ///|
 test "compliance error: eleven" {
   match @nestedtext.loads("-\n    [{]", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "expected ':', found ']'.")
+      @debug.assert_eq(e.line, Some("    [{]"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2750,7 +3020,12 @@ test "compliance error: eleven" {
 ///|
 test "compliance error: casing" {
   match @nestedtext.loads("-\n    [}]", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(6))
+      @debug.assert_eq(e.message, "expected value.")
+      @debug.assert_eq(e.line, Some("    [}]"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2758,7 +3033,12 @@ test "compliance error: casing" {
 ///|
 test "compliance error: promenade" {
   match @nestedtext.loads("-\n    [a{b]", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "expected ',' or ']', found '{'.")
+      @debug.assert_eq(e.line, Some("    [a{b]"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2766,7 +3046,12 @@ test "compliance error: promenade" {
 ///|
 test "compliance error: splurge" {
   match @nestedtext.loads("-\n    [a}b]", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "expected ',' or ']', found '}'.")
+      @debug.assert_eq(e.line, Some("    [a}b]"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2801,7 +3086,12 @@ test "compliance: delusion" {
 ///|
 test "compliance error: itinerant" {
   match @nestedtext.loads("[7:0] gain:\n    desc: the gain\n    type: input signed", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(1))
+      @debug.assert_eq(e.colno, Some(7))
+      @debug.assert_eq(e.message, "extra characters after closing delimiter: 'gain:'.")
+      @debug.assert_eq(e.line, Some("[7:0] gain:"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2905,7 +3195,12 @@ test "compliance: sexton" {
 ///|
 test "compliance error: roomy" {
   match @nestedtext.loads("ingredients:\n    green chilies", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(5))
+      @debug.assert_eq(e.message, "unrecognized line.")
+      @debug.assert_eq(e.line, Some("    green chilies"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2947,7 +3242,12 @@ test "compliance: propose" {
 ///|
 test "compliance error: pillage" {
   match @nestedtext.loads("key 1: value 1\n key 2: value 2", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(2))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "invalid character in indentation: '\\xa0' (NO-BREAK SPACE).")
+      @debug.assert_eq(e.line, Some(" key 2: value 2"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2989,7 +3289,11 @@ test "compliance: cavern" {
 ///|
 test "compliance error: rascal" {
   match @nestedtext.loads("key 1:\n   > value 1\nkey 2: \n   > value 2\nkey 3:  \n   > value 3", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(6))
+      @debug.assert_eq(e.message, "invalid indentation.")
+      @debug.assert_eq(e.line, Some("   > value 3"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -2997,7 +3301,11 @@ test "compliance error: rascal" {
 ///|
 test "compliance error: truncheon" {
   match @nestedtext.loads("-\n   > value 1\n- \n   > value 2\n-  \n   > value 3", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(6))
+      @debug.assert_eq(e.message, "invalid indentation.")
+      @debug.assert_eq(e.line, Some("   > value 3"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -3065,7 +3373,11 @@ test "compliance: frump" {
 ///|
 test "compliance error: asylum" {
   match @nestedtext.loads("��k\u{0}e\u{0}y\u{0} \u{0}1\u{0}:\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}1\u{0}\n\u{0}k\u{0}e\u{0}y\u{0} \u{0}2\u{0}:\u{0}\n\u{0}k\u{0}e\u{0}y\u{0} \u{0}3\u{0}:\u{0}\n\u{0} \u{0} \u{0} \u{0} \u{0}-\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}3\u{0}a\u{0}\n\u{0} \u{0} \u{0} \u{0} \u{0}-\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}3\u{0}b\u{0}\n\u{0}k\u{0}e\u{0}y\u{0} \u{0}4\u{0}:\u{0}\n\u{0} \u{0} \u{0} \u{0} \u{0}k\u{0}e\u{0}y\u{0} \u{0}4\u{0}a\u{0}:\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}4\u{0}a\u{0}\n\u{0} \u{0} \u{0} \u{0} \u{0}k\u{0}e\u{0}y\u{0} \u{0}4\u{0}b\u{0}:\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}4\u{0}b\u{0}\n\u{0}k\u{0}e\u{0}y\u{0} \u{0}5\u{0}:\u{0}\n\u{0} \u{0} \u{0} \u{0} \u{0}>\u{0} \u{0}f\u{0}i\u{0}r\u{0}s\u{0}t\u{0} \u{0}l\u{0}i\u{0}n\u{0}e\u{0} \u{0}o\u{0}f\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}5\u{0}\n\u{0} \u{0} \u{0} \u{0} \u{0}>\u{0} \u{0}s\u{0}e\u{0}c\u{0}o\u{0}n\u{0}d\u{0} \u{0}l\u{0}i\u{0}n\u{0}e\u{0} \u{0}o\u{0}f\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}5\u{0}", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(1))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "input contains invalid UTF-8")
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -3073,7 +3385,11 @@ test "compliance error: asylum" {
 ///|
 test "compliance error: amendment" {
   match @nestedtext.loads("> �\n> �\n> �", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(1))
+      @debug.assert_eq(e.colno, Some(3))
+      @debug.assert_eq(e.message, "input contains invalid UTF-8")
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -3092,7 +3408,12 @@ test "compliance: academic" {
 ///|
 test "compliance error: paragon" {
   match @nestedtext.loads("> Should not allow multiline strings\n> and lists at the same level\n- of indentation.", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(3))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "extra content.")
+      @debug.assert_eq(e.line, Some("- of indentation."))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -3100,7 +3421,12 @@ test "compliance error: paragon" {
 ///|
 test "compliance error: chemist" {
   match @nestedtext.loads("> Should not allow multiline strings\n> and dictionary itmes at the same level\nof: indentation", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(3))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "extra content.")
+      @debug.assert_eq(e.line, Some("of: indentation"))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }
@@ -3108,7 +3434,12 @@ test "compliance error: chemist" {
 ///|
 test "compliance error: neophyte" {
   match @nestedtext.loads("> Should not allow multiline strings\n> with varying levels\n    > of indentation.", @nestedtext.Top::Any) {
-    Err(_) => ()
+    Err(e) => {
+      @debug.assert_eq(e.lineno, Some(3))
+      @debug.assert_eq(e.colno, Some(1))
+      @debug.assert_eq(e.message, "invalid indentation.")
+      @debug.assert_eq(e.line, Some("    > of indentation."))
+    }
     Ok(_) => fail("expected error but got Ok")
   }
 }

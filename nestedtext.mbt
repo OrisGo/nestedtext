@@ -5,9 +5,27 @@
 /// materialized as the requested empty top-level value.
 pub fn loads(input : String, top : Top) -> Result[Value?, NestedTextError] {
   if input.contains("\u{FFFD}") {
-    return Err(
-      NestedTextError::new(UnrecognizedLine, "invalid UTF-8 sequence."),
-    )
+    let parts = input.split("\n")
+    for lineno, part in parts {
+      let line : String = part.to_owned()
+      let found = line.find("\u{FFFD}")
+      match found {
+        Some(p) => {
+          let prefix = line.unsafe_substring(start=0, end=p)
+          let colno = prefix.char_length() + 1
+          return Err(
+            NestedTextError::at(
+              UnrecognizedLine,
+              "input contains invalid UTF-8",
+              lineno + 1,
+              colno,
+              line,
+            ),
+          )
+        }
+        None => continue
+      }
+    }
   }
   let lexer_result = Lexer::from_string(input)
   match lexer_result {
