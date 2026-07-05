@@ -207,6 +207,9 @@ test "parse error with location" {
 
 NestedText documents must be valid UTF-8. The `loads` function takes a `String`, which in MoonBit is always UTF-8 encoded. Binary data containing invalid UTF-8 byte sequences will have those bytes replaced with the replacement character (`U+FFFD`), and `loads` returns an error indicating the location of the first replacement character.
 
+
+**Known issue**: `moon fmt` may **time out** on `compliance_test.mbt`. The file is ~3200 lines with deeply nested literal expressions.
+
 ## Development Status
 
 - [x] Minimal Value API and fail-fast loads entry point
