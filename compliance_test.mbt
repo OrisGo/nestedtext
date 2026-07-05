@@ -3613,5 +3613,5 @@ test "compliance: straggle" {
 
 ///|
 test "compliance: summary" {
-  assert_eq(1, 1) // all 148 tests above ran as individual test cases
+  @debug.assert_eq(1, 1) // all 148 tests above ran as individual test cases
 }

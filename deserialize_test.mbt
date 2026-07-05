@@ -1,4 +1,4 @@
-///|
+﻿///|
 test "expect_string extracts string value" {
   let d = @nestedtext.Deserializer::new(@nestedtext.Value::String("hello"))
   match d.expect_string() {
@@ -33,7 +33,7 @@ test "expect_string errors on dict" {
 test "expect_int parses natural number" {
   let d = @nestedtext.Deserializer::new(@nestedtext.Value::String("42"))
   match d.expect_int() {
-    Ok(n) => assert_eq(n, 42)
+    Ok(n) => @debug.assert_eq(n, 42)
     Err(e) => fail("unexpected error: \{e.message}")
   }
 }
@@ -42,7 +42,7 @@ test "expect_int parses natural number" {
 test "expect_int parses negative number" {
   let d = @nestedtext.Deserializer::new(@nestedtext.Value::String("-7"))
   match d.expect_int() {
-    Ok(n) => assert_eq(n, -7)
+    Ok(n) => @debug.assert_eq(n, -7)
     Err(e) => fail("unexpected error: \{e.message}")
   }
 }
@@ -51,7 +51,7 @@ test "expect_int parses negative number" {
 test "expect_int parses whitespace-padded number" {
   let d = @nestedtext.Deserializer::new(@nestedtext.Value::String("  100  "))
   match d.expect_int() {
-    Ok(n) => assert_eq(n, 100)
+    Ok(n) => @debug.assert_eq(n, 100)
     Err(e) => fail("unexpected error: \{e.message}")
   }
 }
@@ -69,7 +69,7 @@ test "expect_int errors on non-numeric string" {
 test "expect_double parses float" {
   let d = @nestedtext.Deserializer::new(@nestedtext.Value::String("3.14"))
   match d.expect_double() {
-    Ok(n) => assert_eq(n, 3.14)
+    Ok(n) => @debug.assert_eq(n, 3.14)
     Err(e) => fail("unexpected error: \{e.message}")
   }
 }
@@ -103,7 +103,7 @@ test "expect_bool recognises true / false" {
     let (text, expected) = pair
     let d = @nestedtext.Deserializer::new(@nestedtext.Value::String(text))
     match d.expect_bool() {
-      Ok(b) => assert_eq(b, expected)
+      Ok(b) => @debug.assert_eq(b, expected)
       Err(e) => fail("unexpected error for '\{text}': \{e.message}")
     }
   }
@@ -166,7 +166,7 @@ test "expect_list returns items" {
   )
   match d.expect_list() {
     Ok(items) => {
-      assert_eq(items.length(), 2)
+      @debug.assert_eq(items.length(), 2)
       @debug.assert_eq(items[0], @nestedtext.Value::String("a"))
       @debug.assert_eq(items[1], @nestedtext.Value::String("b"))
     }
@@ -193,7 +193,7 @@ test "deserialize_list deserializes typed elements" {
     ]),
   )
   match @nestedtext.deserialize_list(d, fn(d2) { d2.expect_int() }) {
-    Ok(ints) => assert_eq(ints, [1, 2, 3])
+    Ok(ints) => @debug.assert_eq(ints, [1, 2, 3])
     Err(e) => fail("unexpected error: \{e.message}")
   }
 }
@@ -241,13 +241,13 @@ test "field_names returns keys from dict" {
     ]),
   )
   let names = d.field_names()
-  assert_eq(names, ["name", "age"])
+  @debug.assert_eq(names, ["name", "age"])
 }
 
 ///|
 test "field_names returns empty for non-dict" {
   let d = @nestedtext.Deserializer::new(@nestedtext.Value::String("hi"))
-  assert_eq(d.field_names(), [])
+  @debug.assert_eq(d.field_names(), [])
 }
 
 ///|
@@ -276,7 +276,7 @@ test "deserialize_str parses simple dict to typed tuple" {
   match @nestedtext.deserialize_str(input, @nestedtext.Top::Any, parse_person) {
     Ok((name, age)) => {
       @debug.assert_eq(name, "Alice")
-      assert_eq(age, 30)
+      @debug.assert_eq(age, 30)
     }
     Err(e) => fail("unexpected error: \{e.to_string()}")
   }
@@ -292,7 +292,7 @@ test "deserialize_str deserializes list of numbers" {
   let input = "- 1\n- 2\n- 3"
   match
     @nestedtext.deserialize_str(input, @nestedtext.Top::Any, parse_numbers) {
-    Ok(nums) => assert_eq(nums, [1, 2, 3])
+    Ok(nums) => @debug.assert_eq(nums, [1, 2, 3])
     Err(e) => fail("unexpected error: \{e.to_string()}")
   }
 }
@@ -384,7 +384,7 @@ test "expect_int64 parses large number" {
     @nestedtext.Value::String("9223372036854775807"),
   )
   match d.expect_int64() {
-    Ok(n) => assert_eq(n, 9223372036854775807L)
+    Ok(n) => @debug.assert_eq(n, 9223372036854775807L)
     Err(e) => fail("unexpected error: \{e.message}")
   }
 }
@@ -420,7 +420,7 @@ test "as_value returns underlying Value" {
 test "deserialize_list on empty list" {
   let d = @nestedtext.Deserializer::new(@nestedtext.Value::List([]))
   match @nestedtext.deserialize_list(d, fn(d2) { d2.expect_int() }) {
-    Ok(nums) => assert_eq(nums, [])
+    Ok(nums) => @debug.assert_eq(nums, [])
     Err(e) => fail("unexpected error: \{e.message}")
   }
 }
