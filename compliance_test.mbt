@@ -377,10 +377,8 @@ test "compliance: spastic" {
 ///|
 test "compliance: brother" {
   match @nestedtext.loads("", @nestedtext.Top::Any) {
-    Ok(Some(value)) => assert_true(value ==
-    @nestedtext.Value::String("null"),
-    )
-    Ok(None) => fail("got None for non-empty input")
+    Ok(None) => ()
+    Ok(Some(_)) => fail("expected None for empty input")
     Err(err) => fail("parse error: " + err.to_string())
   }
 }
@@ -388,10 +386,8 @@ test "compliance: brother" {
 ///|
 test "compliance: cosmology" {
   match @nestedtext.loads("#", @nestedtext.Top::Any) {
-    Ok(Some(value)) => assert_true(value ==
-    @nestedtext.Value::String("null"),
-    )
-    Ok(None) => fail("got None for non-empty input")
+    Ok(None) => ()
+    Ok(Some(_)) => fail("expected None for empty input")
     Err(err) => fail("parse error: " + err.to_string())
   }
 }
@@ -399,10 +395,8 @@ test "compliance: cosmology" {
 ///|
 test "compliance: clone" {
   match @nestedtext.loads("\n", @nestedtext.Top::Any) {
-    Ok(Some(value)) => assert_true(value ==
-    @nestedtext.Value::String("null"),
-    )
-    Ok(None) => fail("got None for non-empty input")
+    Ok(None) => ()
+    Ok(Some(_)) => fail("expected None for empty input")
     Err(err) => fail("parse error: " + err.to_string())
   }
 }
@@ -843,10 +837,8 @@ test "compliance: scent" {
 ///|
 test "compliance: smithy" {
   match @nestedtext.loads("# this line is ignored\n\n# this line is also ignored, as is the blank line above.\n\n# this is a comment that contains unicode: “αβγ ΩƱ 𝄞🁒 🌀”\n", @nestedtext.Top::Any) {
-    Ok(Some(value)) => assert_true(value ==
-    @nestedtext.Value::String("null"),
-    )
-    Ok(None) => fail("got None for non-empty input")
+    Ok(None) => ()
+    Ok(Some(_)) => fail("expected None for empty input")
     Err(err) => fail("parse error: " + err.to_string())
   }
 }
@@ -2946,10 +2938,8 @@ test "compliance: president" {
 ///|
 test "compliance: propose" {
   match @nestedtext.loads("", @nestedtext.Top::Any) {
-    Ok(Some(value)) => assert_true(value ==
-    @nestedtext.Value::String("null"),
-    )
-    Ok(None) => fail("got None for non-empty input")
+    Ok(None) => ()
+    Ok(Some(_)) => fail("expected None for empty input")
     Err(err) => fail("parse error: " + err.to_string())
   }
 }
