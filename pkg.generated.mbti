@@ -6,6 +6,12 @@ import {
 }
 
 // Values
+pub fn[T] deserialize_list(Deserializer, (Deserializer) -> Result[T, DeserializeError]) -> Result[Array[T], DeserializeError]
+
+pub fn[T] deserialize_str(String, Top, (Deserializer) -> Result[T, DeserializeError]) -> Result[T, NestedTextError]
+
+pub fn[T] deserialize_value(Value, (Deserializer) -> Result[T, DeserializeError]) -> Result[T, DeserializeError]
+
 pub fn dumps(Value, DumpOptions) -> String
 
 pub fn loads(String, Top) -> Result[Value?, NestedTextError]
@@ -13,6 +19,31 @@ pub fn loads(String, Top) -> Result[Value?, NestedTextError]
 // Errors
 
 // Types and methods
+pub(all) struct DeserializeError {
+  message : String
+} derive(Eq, @debug.Debug)
+pub fn DeserializeError::missing_field(String) -> Self
+pub fn DeserializeError::new(String) -> Self
+pub fn DeserializeError::parse_error(String, String) -> Self
+pub fn DeserializeError::type_mismatch(String, String) -> Self
+
+pub(all) struct Deserializer {
+  value : Value
+} derive(Eq, @debug.Debug)
+pub fn Deserializer::as_value(Self) -> Value
+pub fn Deserializer::expect_bool(Self) -> Result[Bool, DeserializeError]
+pub fn Deserializer::expect_dict(Self) -> Result[Array[(String, Value)], DeserializeError]
+pub fn Deserializer::expect_double(Self) -> Result[Double, DeserializeError]
+pub fn Deserializer::expect_int(Self) -> Result[Int, DeserializeError]
+pub fn Deserializer::expect_int64(Self) -> Result[Int64, DeserializeError]
+pub fn Deserializer::expect_list(Self) -> Result[Array[Value], DeserializeError]
+pub fn[T] Deserializer::expect_optional(Self, (Self) -> Result[T, DeserializeError]) -> Result[T?, DeserializeError]
+pub fn Deserializer::expect_string(Self) -> Result[String, DeserializeError]
+pub fn Deserializer::field_names(Self) -> Array[String]
+pub fn Deserializer::get_field(Self, String) -> Result[Self, DeserializeError]
+pub fn Deserializer::has_field(Self, String) -> Bool
+pub fn Deserializer::new(Value) -> Self
+
 pub(all) struct DumpOptions {
   indent : Int
   sort_keys : Bool
@@ -30,6 +61,7 @@ pub(all) enum ErrorKind {
   UnterminatedInlineDict
   InvalidInlineCharacter
   TrailingContent
+  DeserializationError
 } derive(Eq, @debug.Debug)
 
 pub(all) struct NestedTextError {

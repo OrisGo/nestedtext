@@ -10,6 +10,7 @@ pub(all) enum ErrorKind {
   UnterminatedInlineDict
   InvalidInlineCharacter
   TrailingContent
+  DeserializationError
 } derive(Debug, Eq)
 
 ///|

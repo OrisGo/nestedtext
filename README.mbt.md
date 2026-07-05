@@ -18,6 +18,7 @@ This library brings support for the [NestedText](https://nestedtext.org/) serial
 - [x] Official compliance test suite: 173 tests passing as of 2026-07-06
 - [x] Error message wording and line/column metadata aligned with official spec
 - [x] Compliance tests now assert specific error details (message, lineno, colno, line)
+- [x] Deserialization adapter (Deserializer with `deserialize_str`, `deserialize_value`, `deserialize_list`, and typed extraction helpers)
 
 ## Important: Encoding
 
@@ -90,7 +91,6 @@ test "roundtrip: loads -> dumps -> loads" {
 
 ## TODO
 
-- Add serde-like deserialization adapter.
 - Add CLI tool.
 
 ## License
