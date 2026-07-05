@@ -45,13 +45,7 @@ fn InlineParser::parse_value(
   match self.peek() {
     Some('[') => self.parse_list()
     Some('{') => self.parse_dict()
-    _ =>
-      Err(
-        self.error(
-          InvalidInlineCharacter,
-          "expected '[' or '{'.",
-        ),
-      )
+    _ => Err(self.error(InvalidInlineCharacter, "expected '[' or '{'."))
   }
 }
 
@@ -122,10 +116,7 @@ fn InlineParser::parse_dict(
       Some(':') => self.advance_ignore()
       Some(c) =>
         return Err(
-          self.error(
-            InvalidInlineCharacter,
-            "expected ':', found '\{c}'.",
-          ),
+          self.error(InvalidInlineCharacter, "expected ':', found '\{c}'."),
         )
       None =>
         return Err(

@@ -3,6 +3,7 @@
 /// Source: https://github.com/nestedtext/nestedtext
 
 ///|
+// empty single line multiline string
 test "compliance: alpine" {
   match @nestedtext.loads(">", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -14,6 +15,7 @@ test "compliance: alpine" {
 }
 
 ///|
+// empty multiple line multiline string
 test "compliance: medical" {
   match @nestedtext.loads(">\n>", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -25,6 +27,7 @@ test "compliance: medical" {
 }
 
 ///|
+// single line multiline string
 test "compliance: terrier" {
   match @nestedtext.loads("> Those who can make you believe absurdities can make you commit atrocities.  — Voltaire", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -36,6 +39,7 @@ test "compliance: terrier" {
 }
 
 ///|
+// multiple line multiline string
 test "compliance: perimeter" {
   match @nestedtext.loads("> “The worth of a man to his society can be measured by the contribution he\n>  makes to it — less the cost of sustaining himself and his mistakes in it.”\n>\n>                                                — Erik Jonsson\n>", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -47,6 +51,7 @@ test "compliance: perimeter" {
 }
 
 ///|
+// dictionary with one key-value pair, both are empty strings
 test "compliance: precipice" {
   match @nestedtext.loads(":\n  >", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -61,6 +66,7 @@ test "compliance: precipice" {
 }
 
 ///|
+// simple single-level dictionary with eof linefeed
 test "compliance: province" {
   match @nestedtext.loads("key 1: value 1\nkey 2: value 2\nkey 3: value 3\n", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -79,6 +85,7 @@ test "compliance: province" {
 }
 
 ///|
+// simple single-level dictionary, no eof linefeed
 test "compliance: detonator" {
   match @nestedtext.loads("key 1: value 1\nkey 2: value 2\nkey 3: value 3", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -97,6 +104,7 @@ test "compliance: detonator" {
 }
 
 ///|
+// top-level dictionary with a second level of nesting
 test "compliance: theater" {
   match @nestedtext.loads("key 1: value 1\nkey 2:\nkey 3:\n    - value 3a\n    - value 3b\nkey 4:\n    key 4a: value 4a\n    key 4b: value 4b\nkey 5:\n    > first line of value 5\n    > second line of value 5", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -127,6 +135,7 @@ test "compliance: theater" {
 }
 
 ///|
+// list with one empty string
 test "compliance: crescent" {
   match @nestedtext.loads("-", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -140,6 +149,7 @@ test "compliance: crescent" {
 }
 
 ///|
+// simple single-level list with eof linefeed
 test "compliance: automaton" {
   match @nestedtext.loads("- value 1\n- value 2\n- value 3\n", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -155,6 +165,7 @@ test "compliance: automaton" {
 }
 
 ///|
+// simple single-level list, no eof linefeed
 test "compliance: wally" {
   match @nestedtext.loads("- value 1\n- value 2\n- value 3", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -170,6 +181,7 @@ test "compliance: wally" {
 }
 
 ///|
+// top-level list with a second level of nesting
 test "compliance: native" {
   match @nestedtext.loads("- value 1\n-\n-\n    - value 3a\n    - value 3b\n-\n    key 4a: value 4a\n    key 4b: value 4b\n-\n    > first line of value 5\n    > second line of value 5", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -195,6 +207,7 @@ test "compliance: native" {
 }
 
 ///|
+// nested dictionaries with empty strings as keys and value
 test "compliance: answer" {
   match @nestedtext.loads(":\n    :\n        >", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -212,6 +225,7 @@ test "compliance: answer" {
 }
 
 ///|
+// dictionary with multiline keys
 test "compliance: screwy" {
   match @nestedtext.loads(": key 1\n:     the first key\n    > value 1\n: key 2: the second key\n    - value 2a\n    - value 2b", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -231,6 +245,7 @@ test "compliance: screwy" {
 }
 
 ///|
+// empty inline dictionary
 test "compliance: socialize" {
   match @nestedtext.loads("{}", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -242,6 +257,7 @@ test "compliance: socialize" {
 }
 
 ///|
+// inline dictionary with one key-value pair, both empty strings
 test "compliance: abound" {
   match @nestedtext.loads("{:}", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -256,6 +272,7 @@ test "compliance: abound" {
 }
 
 ///|
+// a simple top-level inline dictionary
 test "compliance: washday" {
   match @nestedtext.loads("{key 1: value 1, key 2: value 2, key 3: value 3}", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -274,6 +291,7 @@ test "compliance: washday" {
 }
 
 ///|
+// a nested top-level inline dictionary
 test "compliance: exhume" {
   match @nestedtext.loads("{key 1: value 1, key 2: [value 2a, value 2b], key 3: {key 3a: value 3a, key 3b: value 3b}}", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -300,6 +318,7 @@ test "compliance: exhume" {
 }
 
 ///|
+// empty inline list
 test "compliance: ointment" {
   match @nestedtext.loads("[]", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -311,6 +330,7 @@ test "compliance: ointment" {
 }
 
 ///|
+// inline list containing one empty string
 test "compliance: banquet" {
   match @nestedtext.loads("[ ]", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -324,6 +344,7 @@ test "compliance: banquet" {
 }
 
 ///|
+// another inline list containing one empty string
 test "compliance: cliff" {
   match @nestedtext.loads("[  ]", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -337,6 +358,7 @@ test "compliance: cliff" {
 }
 
 ///|
+// a simple top-level inline lies
 test "compliance: stingray" {
   match @nestedtext.loads("[value 1, value 2, value 3]", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -352,6 +374,7 @@ test "compliance: stingray" {
 }
 
 ///|
+// a nested top-level inline list
 test "compliance: spastic" {
   match @nestedtext.loads("[value 1, [value 2a, value 2b], {key 3a: value 3a, key 3b: value 3b}]", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -375,6 +398,7 @@ test "compliance: spastic" {
 }
 
 ///|
+// empty document
 test "compliance: brother" {
   match @nestedtext.loads("", @nestedtext.Top::Any) {
     Ok(None) => ()
@@ -384,6 +408,7 @@ test "compliance: brother" {
 }
 
 ///|
+// empty document with comment
 test "compliance: cosmology" {
   match @nestedtext.loads("#", @nestedtext.Top::Any) {
     Ok(None) => ()
@@ -393,6 +418,7 @@ test "compliance: cosmology" {
 }
 
 ///|
+// empty document with blank line
 test "compliance: clone" {
   match @nestedtext.loads("\n", @nestedtext.Top::Any) {
     Ok(None) => ()
@@ -402,6 +428,7 @@ test "compliance: clone" {
 }
 
 ///|
+// dictionaries and lists with deep nesting
 test "compliance: spillage" {
   match @nestedtext.loads("a:\n -\n  b:\n   -\n    c:\n     -\n      d:\n       -\n        e:\n         -\n          f:\n           -\n            g:\n             -\n              h:\n               -\n                i:\n                 -\n                  j:\n                   -\n                    k:\n                     -\n                      l:\n                       -\n                        m:\n                         -\n                          n:\n                           -\n                            o:\n                             -\n                              p:\n                               -\n                                q:\n                                 -\n                                  r:\n                                   -\n                                    s:\n                                     -\n                                      t:\n                                       -\n                                        u:\n                                         -\n                                          v:\n                                           -\n                                            w:\n                                             -\n                                              x:\n                                               -\n                                                y:\n                                                 -\n                                                  z:\n                                                   -\n                                                    α:\n                                                     -\n                                                      β:\n                                                       -\n                                                        γ:\n                                                         -\n                                                          δ:\n                                                           -\n                                                            ε:\n                                                             -\n                                                              ζ:\n                                                               -\n                                                                η:\n                                                                 -\n                                                                  θ:\n                                                                   -\n                                                                    ι:\n                                                                     -\n                                                                      κ:\n                                                                       -\n                                                                        λ:\n                                                                         -\n                                                                          μ:\n                                                                           -\n                                                                            ν:\n                                                                             -\n                                                                              ξ:\n                                                                               -\n                                                                                ο:\n                                                                                 -\n                                                                                  π:\n                                                                                   -\n                                                                                    ρ:\n                                                                                     -\n                                                                                      σ:\n                                                                                       -\n                                                                                        τ:\n                                                                                         -\n                                                                                          υ:\n                                                                                           -\n                                                                                            φ:\n                                                                                             -\n                                                                                              χ:\n                                                                                               -\n                                                                                                ψ:\n                                                                                                 -\n                                                                                                  ω:\n                                                                                                   -\n", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -663,6 +690,7 @@ test "compliance: spillage" {
 }
 
 ///|
+// inline dictionaries and lists with deep nesting
 test "compliance: moccasin" {
   match @nestedtext.loads("{a:[{b:[{c:[{d:[{e:[{f:[{g:[{h:[{i:[{j:[{k:[{l:[{m:[{n:[{o:[{p:[{q:[{r:[{s:[{t:[{u:[{v:[{w:[{x:[{y:[{z:[ ]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -804,6 +832,7 @@ test "compliance: moccasin" {
 }
 
 ///|
+// dictionary with a variety of end-of-line strings
 test "compliance: insulate" {
   match @nestedtext.loads("code   : input signed [7:0] level\nregex  : [+-]?([0-9]*[.])?[0-9]+\\s*\\w*\nmath   : $x = \\frac{{-b \\pm \\sqrt {b^2 - 4ac}}}{2a}$\nunicode: José and François", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -824,6 +853,7 @@ test "compliance: insulate" {
 }
 
 ///|
+// simple multiline string
 test "compliance: scent" {
   match @nestedtext.loads(">     This is the first line of a multiline string, it is indented.\n> This is the second line, it is not indented.", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -835,6 +865,7 @@ test "compliance: scent" {
 }
 
 ///|
+// empty document
 test "compliance: smithy" {
   match @nestedtext.loads("# this line is ignored\n\n# this line is also ignored, as is the blank line above.\n\n# this is a comment that contains unicode: “αβγ ΩƱ 𝄞🁒 🌀”\n", @nestedtext.Top::Any) {
     Ok(None) => ()
@@ -844,6 +875,7 @@ test "compliance: smithy" {
 }
 
 ///|
+// multiline string interrupted with a comment
 test "compliance: import" {
   match @nestedtext.loads("> this is the first line of a multiline string\n# this line is ignored\n> this is the second line of the multiline string", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -855,6 +887,7 @@ test "compliance: import" {
 }
 
 ///|
+// address book example
 test "compliance: unlearn" {
   match @nestedtext.loads("# Contact information for our officers\n\nKatheryn McDaniel:\n    position: president\n    address:\n        > 138 Almond Street\n        > Topeka, Kansas 20697\n    phone:\n        cell: 1-210-555-5297\n        work: 1-210-555-3423\n        home: 1-210-555-8470\n            # Katheryn prefers that we always call her on her cell phone.\n    email: KateMcD@aol.com\n    kids:\n        - Joanie\n        - Terrance\n\nMargaret Hodge:\n    position: vice president\n    address:\n        > 2586 Marigold Lane\n        > Topeka, Kansas 20697\n    phone:\n        {cell: 1-470-555-0398, home: 1-470-555-7570}\n    email: margaret.hodge@ku.edu\n    kids:\n        [Arnie, Zach, Maggie]", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -912,6 +945,7 @@ test "compliance: unlearn" {
 }
 
 ///|
+// too many values error
 test "compliance error: amnesty" {
   match @nestedtext.loads("treasurer:\n    name: Fumiko Purvis\n    address: Home\n        > 3636 Buffalo Ave\n        > Topeka, Kansas 20692", @nestedtext.Top::Any) {
     Err(e) => {
@@ -925,6 +959,7 @@ test "compliance error: amnesty" {
 }
 
 ///|
+// another too many values error
 test "compliance error: subdue" {
   match @nestedtext.loads("treasurer:\n    name: Fumiko Purvis\n    address:  \n        > 3636 Buffalo Ave\n        > Topeka, Kansas 20692", @nestedtext.Top::Any) {
     Err(e) => {
@@ -938,6 +973,7 @@ test "compliance error: subdue" {
 }
 
 ///|
+// multiline key without a value
 test "compliance error: balloon" {
   match @nestedtext.loads(":", @nestedtext.Top::Any) {
     Err(e) => {
@@ -950,6 +986,7 @@ test "compliance error: balloon" {
 }
 
 ///|
+// nested multiline key without a value
 test "compliance error: lolly" {
   match @nestedtext.loads(":\n    :", @nestedtext.Top::Any) {
     Err(e) => {
@@ -962,6 +999,7 @@ test "compliance error: lolly" {
 }
 
 ///|
+// multiple line multiline string with and embedded whitespace
 test "compliance: cornea" {
   match @nestedtext.loads("> Lorem Ipsum\n>\n>     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do\n> eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad \n> minim veniam, quis nostrud exercitation ullamco laboris nisi ut \n> aliquip ex ea commodo consequat. Duis aute irure dolor in \n> reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla \n> pariatur. Excepteur sint occaecat cupidatat non proident, sunt in \n> culpa qui officia deserunt mollit anim id est laborum.", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -973,6 +1011,7 @@ test "compliance: cornea" {
 }
 
 ///|
+// multiple line multiline string with leading, trailing and embedded whitespace
 test "compliance: tacky" {
   match @nestedtext.loads(">\n> Lorem Ipsum\n>\n>     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do\n> eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad \n> minim veniam, quis nostrud exercitation ullamco laboris nisi ut \n> aliquip ex ea commodo consequat. Duis aute irure dolor in \n> reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla \n> pariatur. Excepteur sint occaecat cupidatat non proident, sunt in \n> culpa qui officia deserunt mollit anim id est laborum.\n>", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -984,6 +1023,7 @@ test "compliance: tacky" {
 }
 
 ///|
+// multiple line multiline string with leading, trailing and embedded comments
 test "compliance: mailbox" {
   match @nestedtext.loads(">\n> Lorem Ipsum\n>\n>     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do\n> eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad \n> minim veniam, quis nostrud exercitation ullamco laboris nisi ut \n> aliquip ex ea commodo consequat. Duis aute irure dolor in \n> reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla \n> pariatur. Excepteur sint occaecat cupidatat non proident, sunt in \n> culpa qui officia deserunt mollit anim id est laborum.\n>\n\n# Here is a bit more that one rarely sees ...\n>     Sed ut perspiciatis unde omnis iste natus error sit voluptatem\n> accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae \n> ab illo inventore veritatis et quasi architecto beatae vitae dicta \n> sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit \n> aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos \n> qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui \n> dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed \n> quia non numquam eius modi tempora incidunt ut labore et dolore magnam \n> aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum \n> exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex \n> ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in \n> ea voluptate velit esse quam nihil molestiae consequatur, vel illum \n> qui dolorem eum fugiat quo voluptas nulla pariatur?\"\n>\n\n# There is more, but let's stop here.", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -995,6 +1035,7 @@ test "compliance: mailbox" {
 }
 
 ///|
+// Check ability of NestedText to hold some special characters. The CR and LF characters will be lost in the conversion to NT.
 test "compliance: reprobate" {
   match @nestedtext.loads("the backslash character: \\\nthe single quote character: '\nthe double quote character: \"\nthe bell character: \u{7}\nthe back space character: \u{8}\nthe form feed character: \u{12}\nthe line feed character: \nthe carriage return character: \rthe horizontal tab character: \t\nthe vertical tab character: \u{11}\nthe escape character: \u{27}\nthe delete character: \n", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1031,6 +1072,7 @@ test "compliance: reprobate" {
 }
 
 ///|
+// Check ability of NestedText to hold some special characters. The CR and LF characters will be lost in the conversion to NT. Window line terminators (CR-LF) are used.
 test "compliance: incision" {
   match @nestedtext.loads("the backslash character: \\\r\nthe single quote character: '\r\nthe double quote character: \"\r\nthe bell character: \u{7}\r\nthe back space character: \u{8}\r\nthe form feed character: \u{12}\r\nthe line feed character: \n\r\nthe carriage return character: \r\r\nthe horizontal tab character: \t\r\nthe vertical tab character: \u{11}\r\nthe escape character: \u{27}\r\nthe delete character: \r\n\r\n", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1067,6 +1109,7 @@ test "compliance: incision" {
 }
 
 ///|
+// Check ability of NestedText to hold some special characters. The CR and LF characters will be lost in the conversion to NT. Mac line terminators (CR) are used.
 test "compliance: pelvis" {
   match @nestedtext.loads("the backslash character: \\\rthe single quote character: '\rthe double quote character: \"\rthe bell character: \u{7}\rthe back space character: \u{8}\rthe form feed character: \u{12}\rthe line feed character: \n\rthe carriage return character: \r\rthe horizontal tab character: \t\rthe vertical tab character: \u{11}\rthe escape character: \u{27}\rthe delete character: \r\r", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1103,6 +1146,7 @@ test "compliance: pelvis" {
 }
 
 ///|
+// Check ability of NestedText to hold some special characters. The CR and LF characters will be lost in the conversion to NT. Mixed line terminators (LF, CR, CR-LF) are used.
 test "compliance: pursuit" {
   match @nestedtext.loads("the backslash character: \\\r\nthe single quote character: '\rthe double quote character: \"\nthe bell character: \u{7}\r\nthe back space character: \u{8}\rthe form feed character: \u{12}\nthe line feed character: \n\r\nthe carriage return character: \r\rthe horizontal tab character: \t\nthe vertical tab character: \u{11}\r\nthe escape character: \u{27}\r\nthe delete character: \r\n\r\n", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1139,6 +1183,7 @@ test "compliance: pursuit" {
 }
 
 ///|
+// various multiline strings with leading, trailing, and internal newlines and comments
 test "compliance: beset" {
   match @nestedtext.loads("no newlines:\n    > line 1\n    > line 2\nleading newline:\n    >\n    > line 1\n    > line 2\ninternal newline:\n    > line 1\n    >\n    > line 2\ntrailing newline:\n    > line 1\n    > line 2\n    >\nleading, internal, and trailing newline:\n    >\n    > line 1\n    >\n    > line 2\n    >\nleading newlines:\n    >\n    >\n    > line 1\n    > line 2\ninternal newlines:\n    > line 1\n    >\n    >\n    > line 2\ntrailing newlines:\n    > line 1\n    > line 2\n    >\n    >\nleading, internal, and trailing newlines:\n    >\n    >\n    > line 1\n    >\n    >\n    > line 2\n    >\n    >\nleading blank line:\n\n    > line 1\n    > line 2\ninternal blank line:\n    > line 1\n\n    > line 2\ntrailing blank line:\n    > line 1\n    > line 2\n\nleading comment:\n  # ignore me\n    > line 1\n    > line 2\ninternal comment:\n    > line 1\n        # ignore me\n    > line 2\ntrailing comment:\n    > line 1\n    > line 2\n  # ignore me\n\n            # ignore me\n\n                       ", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1181,6 +1226,7 @@ test "compliance: beset" {
 }
 
 ///|
+// error due to inconsistent indent level
 test "compliance error: gendarme" {
   match @nestedtext.loads("ingredients:\n  > green chilies\n    > red chilies", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1194,6 +1240,7 @@ test "compliance error: gendarme" {
 }
 
 ///|
+// error because content does not start in column 1
 test "compliance error: sketchy" {
   match @nestedtext.loads("     > green chilies\n     > red chilies", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1207,6 +1254,7 @@ test "compliance error: sketchy" {
 }
 
 ///|
+// error because the indents are tabs
 test "compliance error: prankster" {
   match @nestedtext.loads("ingredients:\n\t> green chilies\n\t> red chilies", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1220,6 +1268,7 @@ test "compliance error: prankster" {
 }
 
 ///|
+// error because indentation contains a unicode space
 test "compliance error: streamer" {
   match @nestedtext.loads("ingredients:\n        > green chilies\n        > red chilies\n#   ↑ this is a non-breaking space", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1233,6 +1282,7 @@ test "compliance error: streamer" {
 }
 
 ///|
+// dictionary with empty values
 test "compliance: guinea" {
   match @nestedtext.loads("key1:\nkey2:", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1249,6 +1299,7 @@ test "compliance: guinea" {
 }
 
 ///|
+// dictionary with empty values
 test "compliance: dusty" {
   match @nestedtext.loads("key1: \nkey2: ", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1265,6 +1316,7 @@ test "compliance: dusty" {
 }
 
 ///|
+// dictionary with multiline key
 test "compliance: jaunt" {
   match @nestedtext.loads(": apricot\n:\n    > 8", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1279,6 +1331,7 @@ test "compliance: jaunt" {
 }
 
 ///|
+// dictionary with multiline key
 test "compliance: abide" {
   match @nestedtext.loads(":  key-a\" : key-b' : key-c \n    > value", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1293,6 +1346,7 @@ test "compliance: abide" {
 }
 
 ///|
+// empty dictionary
 test "compliance: benchmark" {
   match @nestedtext.loads("{}", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1304,6 +1358,7 @@ test "compliance: benchmark" {
 }
 
 ///|
+// error because top dictionary is indented
 test "compliance error: milligram" {
   match @nestedtext.loads("    key: value", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1317,6 +1372,7 @@ test "compliance error: milligram" {
 }
 
 ///|
+// error because value is specified twice for the same dictionary key first as an end-of-line string that contains only a single space second as an indented dictionary
 test "compliance error: fifth" {
   match @nestedtext.loads("key 1:  \n        # notice the extra space at the end of the above line\n\n        # that, combined with the indent in the line below is an error\n        key 2: value 2", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1330,6 +1386,7 @@ test "compliance error: fifth" {
 }
 
 ///|
+// error because there is a tab in the indentation
 test "compliance error: chatterer" {
   match @nestedtext.loads("# invalid indentation, tab in indentation\nkey 1:\n    \t    key 1.1: value 1.1\n", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1343,6 +1400,7 @@ test "compliance error: chatterer" {
 }
 
 ///|
+// error because the sublist is not indented
 test "compliance error: concuss" {
   match @nestedtext.loads("ingredients:\n- green chilies", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1356,6 +1414,7 @@ test "compliance error: concuss" {
 }
 
 ///|
+// error because the two list items do not have the same indent
 test "compliance error: marinade" {
   match @nestedtext.loads("ingredients:\n  - green chilies\n    - red chilies", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1369,6 +1428,7 @@ test "compliance error: marinade" {
 }
 
 ///|
+// error because the two dict items do not have the same indent
 test "compliance error: detract" {
   match @nestedtext.loads("candidates:\n    name:\n  phone:", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1382,6 +1442,7 @@ test "compliance error: detract" {
 }
 
 ///|
+// error because the two list items do not have the same indent
 test "compliance error: silky" {
   match @nestedtext.loads("ingredients:\n    - green chilies\n  - red chilies", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1395,6 +1456,7 @@ test "compliance error: silky" {
 }
 
 ///|
+// error because differing types at same level of indentation
 test "compliance error: matinee" {
   match @nestedtext.loads("ingredients: red chilies\n- green chilies", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1408,6 +1470,7 @@ test "compliance error: matinee" {
 }
 
 ///|
+// error because there is no tag on line 2
 test "compliance error: slipknot" {
   match @nestedtext.loads("ingredients:\n    green chilies", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1421,6 +1484,7 @@ test "compliance error: slipknot" {
 }
 
 ///|
+// error because there are duplicate keys
 test "compliance error: facet" {
   match @nestedtext.loads("key: value 1\nkey: value 2", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1434,6 +1498,7 @@ test "compliance error: facet" {
 }
 
 ///|
+// error because of tab in indentation
 test "compliance error: smudge" {
   match @nestedtext.loads("key:\n    \t    > first line\n    \t    > second line", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1447,6 +1512,7 @@ test "compliance error: smudge" {
 }
 
 ///|
+// checks for support of : in key
 test "compliance: spindly" {
   match @nestedtext.loads("key::", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1461,6 +1527,7 @@ test "compliance: spindly" {
 }
 
 ///|
+// dictionary with a mix of multiline keys and unicode nonsense
 test "compliance: charter" {
   match @nestedtext.loads(":\n    >\n~!@#$%^&*()_+-1234567890{}[]|;<>?,./: ~!@#$%^&*()_+-1234567890{}[]|:;<>?,./\n: - key 3\n    > - value 3\n: key 4: \n    > value 4: \n: > key 5\n    > > value 5\n: # key 6\n    > #value 6\n: : key 7\n    > : value 7\n\" key 8 \": \" value 8 \"\n' key 9 ': ' value 9 '\nkey 10: value '\" 10\nkey 11: And Fred said 'yabba dabba doo!' to Barney.\nkey \" 12: value ' 12\n$€¥£₩₺₽₹ɃΞȄ: $€¥£₩₺₽₹ɃΞȄ\nYZEPTGMKk_cmuµμnpfazy: YZEPTGMKk_cmuµμnpfazy\na-zA-Z%√{us}{cur}][-^/()·⁻⁰¹²³⁴⁵⁶⁷⁸⁹°ÅΩƱΩ℧: a-zA-Z%√{us}{cur}][-^/()·⁻⁰¹²³⁴⁵⁶⁷⁸⁹°ÅΩƱΩ℧", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1503,6 +1570,7 @@ test "compliance: charter" {
 }
 
 ///|
+// dictionary with key that contains quote characters
 test "compliance: patchy" {
   match @nestedtext.loads("key 1: value 1\nkey'\"2: value 2", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1519,6 +1587,7 @@ test "compliance: patchy" {
 }
 
 ///|
+// dictionary with white space after keys
 test "compliance: excuse" {
   match @nestedtext.loads("k1: v1\nk2 : v2\nk3  : v3\nk4\t: v4", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1539,6 +1608,7 @@ test "compliance: excuse" {
 }
 
 ///|
+// various valid dictionary items with unusual unquoted keys
 test "compliance: sandstorm" {
   match @nestedtext.loads("-#:'>: -#:\">:\n-#:\">: -#:'>:\n-#''>:: -#\"\">::\n-#\"\">:: -#''>::\n    # indented comment\n:-#:'>: :-#:\">:\n:-#:\">: :-#:'>:\n:-#''>:: :-#\"\">::\n:-#\"\">:: :-#''>::\n        # indented comment\n>:-#:'>: >:-#:\">:\n>:-#:\">: >:-#:'>:\n>:-#''>:: >:-#\"\">::\n>:-#\"\">:: >:-#''>::", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1575,6 +1645,7 @@ test "compliance: sandstorm" {
 }
 
 ///|
+// keys contain quote character and value contains dict item key.
 test "compliance: shard" {
   match @nestedtext.loads("'a: ': a:\n: 'b: \n    > ': b:", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1591,6 +1662,7 @@ test "compliance: shard" {
 }
 
 ///|
+// long multiline keys
 test "compliance: beach" {
   match @nestedtext.loads(": This is a key that is\n: spread over multiple lines.\n: Like normal multiline strings,\n: it can contain any character\n: without restriction.\n    > This is its value\n\n: Here is another multiline key.\n: But in this case it has an empty value.\n    >\n\n: This is another multiline key,\n: this one with a multiline value.\n    > Here is the multiline value.\n    > It is paired with a multiline key.\n\nhere is a simple key: with a simple value\n\n: Here is a multiline key\n: with a list value.\n    - 0\n    - 1\n\n: Here is a multiline key\n: with a dictionary value.\n    a: a\n    b: b\n\nhere is another simple key: with another simple value\n\n: here is a multiline key: that kind of looks a dict item\n    > a multiline value\n\n: This is another multiline key,\n: this one with a dictionary as a value that has a multiline key.\n    : This is another multiline key,\n    : this one with a multiline value.\n        > Here is the multiline value.\n        > It is paired with a multiline key.\n\n: This a multiline key with a blank second line.\n:\n    > yabba dabba doo", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1634,6 +1706,7 @@ test "compliance: beach" {
 }
 
 ///|
+// multiline keys
 test "compliance: crumbly" {
   match @nestedtext.loads("A :\n : B:\n  >\n: C :\n >\nD :\n: E\n >\n: F1\n: F2\n >", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -1659,6 +1732,7 @@ test "compliance: crumbly" {
 }
 
 ///|
+// error with multiline keys due to multiline key missing value
 test "compliance error: despair" {
   match @nestedtext.loads("A :\n : B:\n: C :\nD :\n: E", @nestedtext.Top::Any) {
     Err(e) => {
@@ -1672,6 +1746,7 @@ test "compliance error: despair" {
 }
 
 ///|
+// rather large real world example with all word replaced by random words
 test "compliance: doodle" {
   match @nestedtext.loads("tether:\n    disclose: paranoid clunk gaggle\n    prolong: stove banish\n    navel: -clipboard organist signify\n    crane: -washout honey guarantor=aircrew\n    inure: fondle = 10kΩ*dissect\n\nmajesty:\n    fatten: washbowl flagon gentile hairstyle\n    static: lender busby\n    niece: -humpback adduce ferryboat\n    reservoir: -dally idiot enlarge=avalanche\n    wally: divorcee = 10kΩ*fugue\n\nbanner:\n    scepter: trollop living giddy\n    lager: piper glacier\n    debunk: -trapeze person matron\n    pecan: -uncanny perform megaton=profiteer\n    register: answer = 10kΩ*trend\n\nmonolith:\n    partitive: bookie outcome buckskin\n    roller: pixie fraud\n    change: scullery-roach rubber reveal+payoff\n    simulator: smock fritter consign=chateau\n    narrow: betrothal = 10kΩ*trooper - landau\n\nreinstate:\n    dramatist: pasture glade enslave upright\n    kinky: deuce birdie\n    bathroom: people-layoff fluke flood+sonata\n    heart: loiter feature scamper=drivel\n    vendetta: nauseate = 10kΩ*hoodlum - signboard\n\noverstate:\n    deter: clitoris treachery reading\n    saddlebag: doodle enunciate\n    cherub: cupboard-shingle refuge reefer+animate\n    overcome: gasometer crease bazooka=thriller\n    poplar: centipede = 10kΩ*headman - dewlap\n\n: [testament:blight] spangle\n    otter: adherent disguise electrode biplane\n    stormy: curfew neuter\n    spaceman: addict = snowman*(anxiety+embitter)*bayonet kestrel liken\n    hardy thinner: 'pretend\n    belief: sphere\n    sachet:\n        > fortnight: twitch(hopper) rebut duodenum=bottom; pleat=onward.\n        > frizz: galley(genealogy) advantage whelk=-sprawl; waist=-immigrant.\n\n: [mongrel:sequester] prism\n    bairn: easterner racketeer shortfall bootlace amoeba\n    canopy: refuse profit\n    snuggle: baritone = scrounger*(supplier+clobber)*flutter agate simplify\n    edition industry: 'castle\n    tenth: rhyme\n    scrunch:\n        > ledge: exporter(wrongdoer) levitate daiquiri=subsidize; bulletin=reason.\n        > jackpot: butcher(frequent) medicine memento=-diaphragm; ointment=-raving.\n\n: [frogman:alleyway] fatigue\n    hyena: believer timepiece infuriate sixty\n    cache: bootee scoopful\n    laborer: egoist = lunatic*(obeisance+voice)*gambit nickel queer\n    scraggy doggie: 'cedar\n    requisite: pastor\n    teacher:\n        > toboggan: champion(dominion) adieu golfer=linen; divorce=stake.\n        > fireguard: vineyard(confide) seashore diddle=-dartboard; genuflect=-fidget.\n\ninstall:\n    abide: waistline\n    skunk: coarsen nuisance\n    briar: eviction = glide && !reliquary overfeed resent\n    magnum accident: 'quince\n    nightmare: cheapen\n\nwithdraw:\n    chalice: noble canard\n    siphon: utility overhead\n    butler: aspirin.starlet < heater < brace.blockade\n    juggler: crumpet = sunny + slattern + persuade. cataclysm = scolding.\n    betake: projector.insulator\n    hearth: convector\n\nsurgery:\n    sunbathe: decathlon\n    fixation: heighten watcher\n    stretchy: -washday < burnish < debrief\n    scabbard: reward\n\nintercede barony:\n    busker: yachtsman-fleshpot sandbag flummox\n    vestry: panorama\n    sanction: drench=\"%keyboard\"\n\nharmony creaky:\n    physicist: gauge-doublet bungalow clink\n    swerve: cleanser\n    royalty:\n        > essay=\"%honeymoon\";\n        > extol = \"swampy\";\n        > almshouse = \"\".\n\ncaterwaul imitation:\n    dunce: bodice sitcom chipmunk\n    profane: monocle\n    sortie: impute=\"%covert\"\n\nmenace:\n    dredge: miasma litigant broil\n    bishop: medley\n    inquest: scourer=\"%gamma\"; mesmerize='ballcock\n\nmattock:\n    taint: buttery combatant stalwart\n    oculist: implicate\n    support: closure='snake; phoenix=\"%smoothie\"\n\nchance:\n    riposte: crusade\n    scripture: cathode\n    doorstep: dukedom=screening; lifebuoy=\"%crackle\"\n    salesman: shimmer cobweb spool=butter.\n\nasset:\n    overthrow: dainty\n    chancy: bough psychotic\n    sultana: father hormone caliber=mayday.\n\npollinate:\n    doctor: masochist\n    strangler: saloon ensemble shower\n    tuxedo:\n        > inject='strategy;\n        > purport={toffee,ripper}.\n    citadel:\n        > shrew repellent dairymaid=laser; elevator=biped.\n        > resound garage mistreat=rebuild; scree=choke.\n        > anchor begrudge slalom=reassert; molester=chopper.\n        > dizzy outbreak snifter=tussle; remove=survive.\n        > noodle panegyric importune=native; accredit=loser.\n\nacquit invest gravity:\n    remain: beetroot maroon cliche ninety\n    bookmark: munch\n    commodore:\n        > plank=sundry;\n        > prick=rehear;\n        > bonnet=\"banana\"\n    transfer:\n        > blister project adjective=slinky; uncover=salty.\n        > bowler acquiesce nobody=syllabus; bushy=fossilize.\n\nhorror megalith:\n    spurt: flower towpath rejoicing dowry rupture\n    recur: capacity\n    tract:\n        > goatee='graze;\n        > liqueur=\"scream\";\n        > detain=prefigure;\n        > spill={eggplant,poach}\n    plunger:\n        > cutting dislocate prince=spongy; flirt=debut.\n        > neurone cricketer shredder=property; break=octagon; plutocrat=lapwing.\n        > softy expert tycoon=qualify; coachman=heretic.\n        > redwood notebook heath=blackjack; frump=washstand.\n        > loose keeper applaud=destroyer; intention=hymnal.\n        > potentate brasserie souvenir=tumor; masseur=hasten.\n        > sanctify report touchdown=afford; combat=impart.\n        > brute elder bisexual=penknife; treadmill=thesaurus.\n        > tissue sickly dimmer=dowdy; cylinder=actor.\n        > awakening robotic fascia=paperboy; scalp=length; seashell=50μA.\n        > larch fashion crack=scorpion; explicate=retire.\n        > mature lapel incline=dressing; thwack=rivet.\n        > neologism phonetic zebra=upstage; realtor=showpiece.\n        > evacuee stride softener=ditty; earth=bookcase.\n        > uproot cross titter=constrict; specific=wayside.\n        > overwrite overshoot quandary=panther; cartwheel=ratio.\n\ninformer payroll:\n    sequin: armadillo exclaim foray cuckoo\n    lynch: punchbowl\n    trump:\n        > bedeck=quota;\n        > machete=croupier;\n        > alpine=\"response\";\n        > vegetable=slowdown.\n    whisker:\n        > lottery sheath moonlight=chamber.\n        > fantasize pullover stool=eject.\n\nbarbarity, allude, whittle:\n    militant: garret dictate sweeper\n    extension: senator\n    justify:\n        > taxicab=ferry;\n        > paragraph=spokesman;\n        > politic=codpiece;\n        > grizzle=clerk;\n        > perturb=mudguard;\n        > decade=\"sickness\"\n    broad:\n        > ceramic morsel sahib=gelding.\n        > gravy shoddy fixative=scramble.\n        > smelt beatnik describe=duckling.\n        > bourbon crusader tabloid=wordy.\n\nextenuate, promoter:\n    store: treasury dumpling emotion skirmish\n    epitaph: incumbent\n    yearning:\n        > adjudge='yearbook;\n        > maneuver=\"infer\";\n        > cabaret=deception;\n        > hostel={fossil,diagnose}\n    sporran:\n        > alphabet counter haughty=ceiling; treadle=reedy.\n        > hierarchy hardship troll=detractor; holocaust=deafen; gangway=translate.\n        > thought termite limousine=hustle; tweed=majorette.\n        > batten swindler parkland=outsider; crawl=prevail.\n        > provision fabric indict=amaze; weight=commando.\n        > extend cabal charge=admit; umlaut=steel.\n        > strength councilor entity=address; encamp=slake.\n        > trespass soapbox knoll=befriend; aggregate=allusion.\n        > sequel fingertip billfold=staunch; particle=combine.\n        > sediment intellect organizer=blurry; fatty=beard; revel=50μA.\n        > toxin steak panacea=elite; scavenge=acoustic.\n        > farmyard resign presage=peasant; jumble=regret.\n        > berry valet alchemist=greasy; clonk=eyesore.\n        > treat temper antenatal=interlink; hurtle=catchy.\n        > obtain seaweed offender=cameo; jostle=reprove.\n        > rigidity radish braise=scoot; petty=marquee.\n\nmenage, quail:\n    outspread: share pinion fruitcake portend\n    reference: appendix\n    daily:\n        > scrapbook=rejoin;\n        > drier=agonize;\n        > sewer=\"dollop\";\n        > bistro=ratepayer.\n    flabby:\n        > pentagon rotor science=besiege.\n        > spider distance shaggy=mayor.\n        > statement venture priory=seance.\n        > sextet riddle shabby=stationer.\n\njelly, exude:\n    naught: misread sandbank speculate\n    espresso: dispel\n    oilman:\n        > amalgam=additive;\n        > tatty=unsettle;\n        > lousy=\"clamber\";\n        > radiator = \"paring, anatomist\";\n        > sidle=thatch.\n    episode:\n        > council whiplash muscle=carriage.\n        > baseline nymph tantrum=spoof; prognosis=trundle; friend=plump.comedy.\n        > induct tubby compost=crank.\n        > family stately expunge=echelon.\n\nholding, scruple:\n    ramrod: tableau beret\n    flatten: tributary\n    cobra:\n        > hunchback=bumpy;\n        > lorry=\"inkling\";\n        > holler = \"pedant, lifeboat\";\n        > butchery=antique.\n    decree:\n        > embroil numskull stigma=explosion.\n        > grand bonus accord=scarf.\n        > amplifier prattle submerge=justice.\n        > grace arrowhead athlete=shaver.", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -2010,6 +2085,7 @@ test "compliance: doodle" {
 }
 
 ///|
+// multiline keys holding urls (multiline key require because of leading braces)
 test "compliance: imbibe" {
   match @nestedtext.loads(": {http://www.kde.org/standards/kcfg/1.0}kcfgfile\n    >\n: {http://www.kde.org/standards/kcfg/1.0}group\n    : {http://www.kde.org/standards/kcfg/1.0}entry\n        -\n            : {http://www.kde.org/standards/kcfg/1.0}default\n                > 250\n        -\n            : {http://www.kde.org/standards/kcfg/1.0}default\n                > krunner,yakuake", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -2038,6 +2114,7 @@ test "compliance: imbibe" {
 }
 
 ///|
+// reject duplicate keys
 test "compliance error: emollient" {
   match @nestedtext.loads("key: value 1\nkey: value 2\nkey: value 3", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2051,6 +2128,7 @@ test "compliance error: emollient" {
 }
 
 ///|
+// Miscellaneous inline dictionaries
 test "compliance: modernize" {
   match @nestedtext.loads("-\n    {}\n-\n    {:}\n-\n    {a:0}\n-\n    {a: k}\n-\n    {a:[]}\n-\n    {a: [b]}\n-\n    {a:{}}\n-\n    {a: {b:1}}\n-\n    {a:0, b:1}\n-\n    {a:{A:0}, b:{B:1}}\n-\n    { a : { A : 0 } , b : { B : 1 } }   \n-\n    {a:[1,2,3], b:[4,5,6]}\n-\n    {a:0,b:1}\n-\n    {a:[],b:[]}\n-\n    {a:[0,1],b:[2,3]}\n-\n    {a:{},b:{}}\n-\n    {a:{b:0,c:1},d:{e:2,f:3}}\n-\n    {a:0,b:[]}\n-\n    {a:[],b:{}}\n-\n    {a:{},b:0}\n-\n    { a:0}\n-\n    {a :0}\n-\n    {a: 0}\n-\n    {a:0 }\n-\n    { a : 0 }\n-\n    {a:0, b:1}\n-\n    {a:0 ,b:1}\n-\n    {a:0 , b:1}\n-\n    {key 1:value 1, key 2 : value 2 }", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -2249,6 +2327,7 @@ test "compliance: modernize" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: baptism" {
   match @nestedtext.loads("-\n    {a}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2262,6 +2341,7 @@ test "compliance error: baptism" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: collate" {
   match @nestedtext.loads("-\n    {", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2275,6 +2355,7 @@ test "compliance error: collate" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: ballroom" {
   match @nestedtext.loads("-\n    {{}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2288,6 +2369,7 @@ test "compliance error: ballroom" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: mercy" {
   match @nestedtext.loads("-\n    {}}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2301,6 +2383,7 @@ test "compliance error: mercy" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: canto" {
   match @nestedtext.loads("-\n    {a,:b}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2314,6 +2397,7 @@ test "compliance error: canto" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: stooge" {
   match @nestedtext.loads("-\n    {a,:b}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2327,6 +2411,7 @@ test "compliance error: stooge" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: cowboy" {
   match @nestedtext.loads("-\n    {a,:b}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2340,6 +2425,7 @@ test "compliance error: cowboy" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: criterion" {
   match @nestedtext.loads("-\n    {a}:b}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2353,6 +2439,7 @@ test "compliance error: criterion" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: protrude" {
   match @nestedtext.loads("-\n    {a[:b}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2366,6 +2453,7 @@ test "compliance error: protrude" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: caftan" {
   match @nestedtext.loads("-\n    {a]:b}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2379,6 +2467,7 @@ test "compliance error: caftan" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: siphon" {
   match @nestedtext.loads("-\n    {a:b{}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2392,6 +2481,7 @@ test "compliance error: siphon" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: unpick" {
   match @nestedtext.loads("-\n    {a:b}}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2405,6 +2495,7 @@ test "compliance error: unpick" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: patchwork" {
   match @nestedtext.loads("-\n    {a:b[}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2418,6 +2509,7 @@ test "compliance error: patchwork" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: frustrate" {
   match @nestedtext.loads("-\n    {a:b]}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2431,6 +2523,7 @@ test "compliance error: frustrate" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: donation" {
   match @nestedtext.loads("-\n    {a:0, , }", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2444,6 +2537,7 @@ test "compliance error: donation" {
 }
 
 ///|
+// error due to malformed inline dictionary
 test "compliance error: flaunt" {
   match @nestedtext.loads("-\n    {a:{A:0}, b{B:1}}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2457,6 +2551,7 @@ test "compliance error: flaunt" {
 }
 
 ///|
+// multilevel inline dictionaries
 test "compliance: magnetize" {
   match @nestedtext.loads("{a: {b:0, c:1}, d: {e:2, f:3}}", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -2483,6 +2578,7 @@ test "compliance: magnetize" {
 }
 
 ///|
+// multilevel inline dictionaries
 test "compliance: succor" {
   match @nestedtext.loads("key 1:\n        {k1.1:v1.1,\t  k1.2:v1.2,      \tk1.3:v1.3\t}\t\nkey 2:\n        {k2.1\t:v2.1,\t  k2.2\t:v2.2,      \tk2.3\t:v2.3\t}\t\nkey 3:\n        {k3.1:\tv3.1,\t  k3.2:\tv3.2,      \tk3.3:\tv3.3\t}\t\nkey 4:\n        {k4.1\t:\tv4.1,\t  k4.2\t:\tv4.2,      \tk4.3\t:\tv4.3\t}\t", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -2531,6 +2627,7 @@ test "compliance: succor" {
 }
 
 ///|
+// malformed inline dictionary (comma after last item)
 test "compliance error: raven" {
   match @nestedtext.loads("key 1:\n       {k1.1:v1.1,\t  k1.2:v1.2,      \tk1.3:v1.3,\t}\t\nkey 2:\n        {k2.1\t:v2.1,\t  k2.2\t:v2.2,      \tk2.3\t:v2.3,\t}\t\nkey 3:\n        {k3.1:\tv3.1,\t  k3.2:\tv3.2,      \tk3.3:\tv3.3,\t}\t\nkey 4:\n        {k4.1\t:\tv4.1,\t  k4.2\t:\tv4.2,      \tk4.3\t:\tv4.3,\t}\t", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2544,6 +2641,7 @@ test "compliance error: raven" {
 }
 
 ///|
+// malformed inline dictionary (comma after last item)
 test "compliance error: emanate" {
   match @nestedtext.loads("{a:0,}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2557,6 +2655,7 @@ test "compliance error: emanate" {
 }
 
 ///|
+// malformed inline dictionary (comma after last item)
 test "compliance error: moonlight" {
   match @nestedtext.loads("{a:0, }", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2570,6 +2669,7 @@ test "compliance error: moonlight" {
 }
 
 ///|
+// malformed inline dictionary (comma after last item)
 test "compliance error: conclude" {
   match @nestedtext.loads("{a:0,:,}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2583,6 +2683,7 @@ test "compliance error: conclude" {
 }
 
 ///|
+// error due to dict item following an inline dictionary
 test "compliance error: prairie" {
   match @nestedtext.loads("{cases: {*: {*: {*:*}}}}\nchecks: *.sv", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2595,6 +2696,7 @@ test "compliance error: prairie" {
 }
 
 ///|
+// error due to dict item following an inline list
 test "compliance error: botch" {
   match @nestedtext.loads("[]\nnutz: truck", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2607,6 +2709,7 @@ test "compliance error: botch" {
 }
 
 ///|
+// error due to dict item following an inline dictionary
 test "compliance error: typhoon" {
   match @nestedtext.loads("{cases: {*: {*: {*:*}}}}\n    checks: *.sv", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2619,6 +2722,7 @@ test "compliance error: typhoon" {
 }
 
 ///|
+// simple list with empty values
 test "compliance: revolver" {
   match @nestedtext.loads("-\n-", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -2633,6 +2737,7 @@ test "compliance: revolver" {
 }
 
 ///|
+// typical list
 test "compliance: denigrate" {
   match @nestedtext.loads("- A\n- B\n- C\n-\n    - D1\n    - D2\n- E", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -2653,6 +2758,7 @@ test "compliance: denigrate" {
 }
 
 ///|
+// empty list
 test "compliance: isometric" {
   match @nestedtext.loads("[]", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -2664,6 +2770,7 @@ test "compliance: isometric" {
 }
 
 ///|
+// error because data switches between list items to dict item in same level of hierarchy
 test "compliance error: seller" {
   match @nestedtext.loads("ingredients:\n  - green chilies\n  cannot mix list with: dictionary\n", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2677,6 +2784,7 @@ test "compliance error: seller" {
 }
 
 ///|
+// error because first item does not start in column 1
 test "compliance error: element" {
   match @nestedtext.loads("\n    - green chilies\n\n- red chilies\n", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2690,6 +2798,7 @@ test "compliance error: element" {
 }
 
 ///|
+// error because first item does not start in column 1
 test "compliance error: twelve" {
   match @nestedtext.loads("- green chilies\n    - red chilies\n", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2703,6 +2812,7 @@ test "compliance error: twelve" {
 }
 
 ///|
+// error because indentation includes a tab
 test "compliance error: derelict" {
   match @nestedtext.loads("# this is an error because indentation is a tab\n- \n\t- red chilies", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2716,6 +2826,7 @@ test "compliance error: derelict" {
 }
 
 ///|
+// list with variety of odd values
 test "compliance: handbook" {
   match @nestedtext.loads("- :\n- ~!@#$%^&*()_+-1234567890{}[]|:;<>?,./\n- - value 3\n- ' : value 4:'\n- > value 5\n- #value 6\n- key 7' : : value 7\n- \" value 8 \"\n- ' value 9 '\n-\n  > value '\" 10\n- And Fred said 'yabba dabba doo!' to Barney.", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -2739,6 +2850,7 @@ test "compliance: handbook" {
 }
 
 ///|
+// list with variety of inline lists
 test "compliance: epoch" {
   match @nestedtext.loads("-\n    []\n-\n    [ ]\n-\n    [,]\n-\n    [a]\n-\n    [:]\n-\n    [[]]\n-\n    [[ ]]\n-\n    [[a]]\n-\n    [{}]\n-\n    [{a:0}]\n-\n    [a,b]\n-\n    [,,]\n-\n    [[],[]]\n-\n    [[],[ ]]\n-\n    [[a,b],[c,d]]\n-\n    [ [ a , b ] , [ c , d ] ]   \n-\n    [{},{}]\n-\n    [{a:0,b:1},{c:2,d:3}]\n-\n    [a,[]]\n-\n    [[],{}]\n-\n    [{},b]\n-\n    [a,]\n-\n    [a, b, ]\n-\n    [ a]\n-\n    [a ]\n-\n    [ a ]\n-\n    [a, b]\n-\n    [a ,b]\n-\n    [a , b]\n-\n    [ ,]\n-\n    [, ]\n-\n    [ , ]\n-\n    [a, b, , ]\n-\n    [[11,12,13],[21,22,23],[31,32,33]]\n-\n    [value 1, value 2 ,  value 3  , ]", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -2927,6 +3039,7 @@ test "compliance: epoch" {
 }
 
 ///|
+// malformed inline list
 test "compliance error: nobleman" {
   match @nestedtext.loads("-\n    [", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2940,6 +3053,7 @@ test "compliance error: nobleman" {
 }
 
 ///|
+// malformed inline list
 test "compliance error: proverb" {
   match @nestedtext.loads("-\n    [,", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2953,6 +3067,7 @@ test "compliance error: proverb" {
 }
 
 ///|
+// malformed inline list
 test "compliance error: marina" {
   match @nestedtext.loads("-\n    [[]", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2966,6 +3081,7 @@ test "compliance error: marina" {
 }
 
 ///|
+// malformed inlines
 test "compliance error: blister" {
   match @nestedtext.loads("-\n    []{a:0}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2979,6 +3095,7 @@ test "compliance error: blister" {
 }
 
 ///|
+// malformed inline list
 test "compliance error: mentor" {
   match @nestedtext.loads("-\n    [a[b]", @nestedtext.Top::Any) {
     Err(e) => {
@@ -2992,6 +3109,7 @@ test "compliance error: mentor" {
 }
 
 ///|
+// malformed inline list
 test "compliance error: valance" {
   match @nestedtext.loads("-\n    [a]b]", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3005,6 +3123,7 @@ test "compliance error: valance" {
 }
 
 ///|
+// malformed inlines
 test "compliance error: eleven" {
   match @nestedtext.loads("-\n    [{]", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3018,6 +3137,7 @@ test "compliance error: eleven" {
 }
 
 ///|
+// malformed inlines
 test "compliance error: casing" {
   match @nestedtext.loads("-\n    [}]", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3031,6 +3151,7 @@ test "compliance error: casing" {
 }
 
 ///|
+// malformed inlines
 test "compliance error: promenade" {
   match @nestedtext.loads("-\n    [a{b]", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3044,6 +3165,7 @@ test "compliance error: promenade" {
 }
 
 ///|
+// malformed inlines
 test "compliance error: splurge" {
   match @nestedtext.loads("-\n    [a}b]", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3057,6 +3179,7 @@ test "compliance error: splurge" {
 }
 
 ///|
+// 3x3 array
 test "compliance: delusion" {
   match @nestedtext.loads("[[11, 12, 13], [21, 22, 23], [31, 32, 33]]", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3084,6 +3207,7 @@ test "compliance: delusion" {
 }
 
 ///|
+// regular dict item with key that begins with brackets
 test "compliance error: itinerant" {
   match @nestedtext.loads("[7:0] gain:\n    desc: the gain\n    type: input signed", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3097,6 +3221,7 @@ test "compliance error: itinerant" {
 }
 
 ///|
+// inline list with embedded tabs
 test "compliance: geyser" {
   match @nestedtext.loads("key 1:\n        [v1,\t  v2,      \tv3,\t]\t", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3116,6 +3241,7 @@ test "compliance: geyser" {
 }
 
 ///|
+// strings with embedded tabs
 test "compliance: muzzle" {
   match @nestedtext.loads("what makes it green\t: \tgreen\tchilies\t", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3130,6 +3256,7 @@ test "compliance: muzzle" {
 }
 
 ///|
+// strings with embedded quote character
 test "compliance: stylistic" {
   match @nestedtext.loads("key: value \" value", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3144,6 +3271,7 @@ test "compliance: stylistic" {
 }
 
 ///|
+// strings with embedded quote character
 test "compliance: hallway" {
   match @nestedtext.loads("key: value ' value", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3158,6 +3286,7 @@ test "compliance: hallway" {
 }
 
 ///|
+// strings with embedded quote characters
 test "compliance: acquire" {
   match @nestedtext.loads("key1: 'And Fred said \"yabba dabba doo!\" to Barney.'\nkey2: \"And Fred said 'yabba dabba doo!' to Barney.\"\nkey3: \"And Fred said \"yabba dabba doo!\" to Barney.\"\nkey4: 'And Fred said 'yabba dabba doo!' to Barney.'\nkey5: And Fred said \"yabba dabba doo!\" to Barney.\nkey6: And Fred said 'yabba dabba doo!' to Barney.", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3182,6 +3311,7 @@ test "compliance: acquire" {
 }
 
 ///|
+// empty string
 test "compliance: sexton" {
   match @nestedtext.loads(">", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3193,6 +3323,7 @@ test "compliance: sexton" {
 }
 
 ///|
+// error, expected multiline string
 test "compliance error: roomy" {
   match @nestedtext.loads("ingredients:\n    green chilies", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3206,6 +3337,7 @@ test "compliance error: roomy" {
 }
 
 ///|
+// top-level single line string
 test "compliance: brainwash" {
   match @nestedtext.loads("> what makes it green?\n>", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3217,6 +3349,7 @@ test "compliance: brainwash" {
 }
 
 ///|
+// minimal inline dictionary
 test "compliance: president" {
   match @nestedtext.loads("{:}", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3231,6 +3364,7 @@ test "compliance: president" {
 }
 
 ///|
+// empty content
 test "compliance: propose" {
   match @nestedtext.loads("", @nestedtext.Top::Any) {
     Ok(None) => ()
@@ -3240,6 +3374,7 @@ test "compliance: propose" {
 }
 
 ///|
+// dictionary keys cannot start with unicode white-space
 test "compliance error: pillage" {
   match @nestedtext.loads("key 1: value 1\n key 2: value 2", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3253,6 +3388,7 @@ test "compliance error: pillage" {
 }
 
 ///|
+// dictionary item keys must have whitespace trimmed from the tail
 test "compliance: tombstone" {
   match @nestedtext.loads("key 1 : value 1\nkey 2\t : value 2\nkey 3  : value 3", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3271,6 +3407,7 @@ test "compliance: tombstone" {
 }
 
 ///|
+// dictionary items must ignore a space following the colon
 test "compliance: cavern" {
   match @nestedtext.loads("key 1:\nkey 2: ", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3287,6 +3424,7 @@ test "compliance: cavern" {
 }
 
 ///|
+// a dictionary item with two values
 test "compliance error: rascal" {
   match @nestedtext.loads("key 1:\n   > value 1\nkey 2: \n   > value 2\nkey 3:  \n   > value 3", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3299,6 +3437,7 @@ test "compliance error: rascal" {
 }
 
 ///|
+// a list item with two values
 test "compliance error: truncheon" {
   match @nestedtext.loads("-\n   > value 1\n- \n   > value 2\n-  \n   > value 3", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3311,6 +3450,7 @@ test "compliance error: truncheon" {
 }
 
 ///|
+// inline strings (and inline dictionary-friendly strings) must trim whitespace from both sides of values
 test "compliance: vagrant" {
   match @nestedtext.loads("inline dict:\n    {a:A, b: B,c :C , d : D }\ninline list:\n    [a, b,c , d ]", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3341,6 +3481,7 @@ test "compliance: vagrant" {
 }
 
 ///|
+// top-level dictionary with a second level of nesting, latin1 encoding
 test "compliance: frump" {
   match @nestedtext.loads("key 1: value 1\nkey 2:\nkey 3:\n    - value 3a\n    - value 3b\nkey 4:\n    key 4a: value 4a\n    key 4b: value 4b\nkey 5:\n    > first line of value 5\n    > second line of value 5", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3371,6 +3512,9 @@ test "compliance: frump" {
 }
 
 ///|
+// Test with leading U+FFFD (replacement characters from invalid UTF-8 start bytes),
+// followed by NUL-separated characters (simulating UTF-16 input decoded as-is).
+// top-level dictionary with a second level of nesting, utf-16
 test "compliance error: asylum" {
   match @nestedtext.loads("��k\u{0}e\u{0}y\u{0} \u{0}1\u{0}:\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}1\u{0}\n\u{0}k\u{0}e\u{0}y\u{0} \u{0}2\u{0}:\u{0}\n\u{0}k\u{0}e\u{0}y\u{0} \u{0}3\u{0}:\u{0}\n\u{0} \u{0} \u{0} \u{0} \u{0}-\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}3\u{0}a\u{0}\n\u{0} \u{0} \u{0} \u{0} \u{0}-\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}3\u{0}b\u{0}\n\u{0}k\u{0}e\u{0}y\u{0} \u{0}4\u{0}:\u{0}\n\u{0} \u{0} \u{0} \u{0} \u{0}k\u{0}e\u{0}y\u{0} \u{0}4\u{0}a\u{0}:\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}4\u{0}a\u{0}\n\u{0} \u{0} \u{0} \u{0} \u{0}k\u{0}e\u{0}y\u{0} \u{0}4\u{0}b\u{0}:\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}4\u{0}b\u{0}\n\u{0}k\u{0}e\u{0}y\u{0} \u{0}5\u{0}:\u{0}\n\u{0} \u{0} \u{0} \u{0} \u{0}>\u{0} \u{0}f\u{0}i\u{0}r\u{0}s\u{0}t\u{0} \u{0}l\u{0}i\u{0}n\u{0}e\u{0} \u{0}o\u{0}f\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}5\u{0}\n\u{0} \u{0} \u{0} \u{0} \u{0}>\u{0} \u{0}s\u{0}e\u{0}c\u{0}o\u{0}n\u{0}d\u{0} \u{0}l\u{0}i\u{0}n\u{0}e\u{0} \u{0}o\u{0}f\u{0} \u{0}v\u{0}a\u{0}l\u{0}u\u{0}e\u{0} \u{0}5\u{0}", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3383,6 +3527,9 @@ test "compliance error: asylum" {
 }
 
 ///|
+// Test with U+FFFD (replacement characters) in each line, representing
+// non-UTF-8 byte sequences (0xC0, 0xC1, 0xFF).
+// string that contains characters that are invalid in utf-8
 test "compliance error: amendment" {
   match @nestedtext.loads("> �\n> �\n> �", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3395,6 +3542,8 @@ test "compliance error: amendment" {
 }
 
 ///|
+// Test with U+FEFF (BOM) at the start. NestedText allows a UTF-8 BOM prefix.
+// document with UTF-8 BOM
 test "compliance: academic" {
   match @nestedtext.loads("﻿{}", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==
@@ -3406,6 +3555,7 @@ test "compliance: academic" {
 }
 
 ///|
+// invalid mix of string and list items
 test "compliance error: paragon" {
   match @nestedtext.loads("> Should not allow multiline strings\n> and lists at the same level\n- of indentation.", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3419,6 +3569,7 @@ test "compliance error: paragon" {
 }
 
 ///|
+// invalid mix of string and dict items
 test "compliance error: chemist" {
   match @nestedtext.loads("> Should not allow multiline strings\n> and dictionary itmes at the same level\nof: indentation", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3432,6 +3583,7 @@ test "compliance error: chemist" {
 }
 
 ///|
+// invalid indentation
 test "compliance error: neophyte" {
   match @nestedtext.loads("> Should not allow multiline strings\n> with varying levels\n    > of indentation.", @nestedtext.Top::Any) {
     Err(e) => {
@@ -3445,6 +3597,7 @@ test "compliance error: neophyte" {
 }
 
 ///|
+// key that contains a colon
 test "compliance: straggle" {
   match @nestedtext.loads("gain [7:0]: Gain control (quarter dB steps from -32 dB to +31.75 dB)", @nestedtext.Top::Any) {
     Ok(Some(value)) => assert_true(value ==

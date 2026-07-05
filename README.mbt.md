@@ -25,7 +25,7 @@ NestedText documents MUST be valid UTF-8. The `loads` function takes a `String`,
 
 When reading from a file, decode it as UTF-8 first:
 
-```mbt
+```mbt nocheck
 let content = @fs.read_file_to_string("config.nt", encoding="utf-8")
 match @nestedtext.loads(content, @nestedtext.Top::Any) {
   Ok(value) => // ...
