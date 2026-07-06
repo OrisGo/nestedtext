@@ -91,7 +91,22 @@ test "roundtrip" {
 
 ## Typed Deserialization
 
-The `Deserializer` provides typed extraction on top of `Value`. Use `deserialize_str` to parse and deserialize in one step, or `deserialize_value` on an already-parsed `Value`.
+The `Deserializer` provides typed extraction on top of `Value` — similar in spirit to Rust's [serde](https://serde.rs/). Use `deserialize_str` to parse and deserialize in one step, or `deserialize_value` on an already-parsed `Value`.
+
+### Comparison with Rust's serde
+
+Unlike serde, this library does **not** use traits or derive macros. Instead, deserialization is driven by **higher-order functions**: you supply a closure `fn(Deserializer) -> Result[T, DeserializeError]` that calls typed extraction methods to build your target type.
+
+| Aspect | Rust serde | OrisGo/nestedtext |
+|--------|-----------|-------------------|
+| Mechanism | `Deserialize` trait + `#[derive(Deserialize)]` | Callback closure `fn(Deserializer) -> Result[T, _]` |
+| Struct deserialization | Automatic via derive | Manual via `get_field` + `expect_*` |
+| Visitor pattern | `Visitor` trait with `visit_*` methods | Direct method calls on `Deserializer` |
+| Error propagation | `serde::de::Error` trait | `Result[T, DeserializeError]` chaining with `try` |
+| Input format | Generic data model | NestedText AST only (`Value` enum) |
+| All values are strings | N/A (format-dependent) | Yes — `expect_int()` etc. parse from `Value::String` |
+
+### Usage
 
 ```mbt check
 ///|
