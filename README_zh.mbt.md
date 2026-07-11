@@ -306,7 +306,7 @@ NestedText 文档必须是合法的 UTF-8。`loads` 接受 `String` 类型，在
 
 **已知问题**：`moon fmt` 在 `compliance_test.mbt` 上可能**超时**。该文件约 3200 行，包含深度嵌套的字面量表达式。
 
-## 开发进度
+<!-- ## 开发进度
 
 - [x] 最小化 Value API 与快速失败入口
 - [x] 词法分析器（行分类、BOM 剥离、换行规范化、缩进校验）
@@ -315,7 +315,7 @@ NestedText 文档必须是合法的 UTF-8。`loads` 接受 `String` 类型，在
 - [x] 官方合规测试集：截至 2026-07-06，173 项测试全部通过
 - [x] 错误信息措辞及行列元数据与官方规范对齐
 - [x] 反序列化适配器（`Deserializer`、`deserialize_str`、`deserialize_value`、`deserialize_list`）
-- [x] CLI 校验器（`cmd/main`）— 校验 `.nt` 文件并生成 roundtrip 输出
+- [x] CLI 校验器（`cmd/main`）— 校验 `.nt` 文件并生成 roundtrip 输出 -->
 
 ## 许可证
 

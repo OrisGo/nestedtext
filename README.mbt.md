@@ -307,7 +307,7 @@ NestedText documents must be valid UTF-8. The `loads` function takes a `String`,
 
 **Known issue**: `moon fmt` may **time out** on `compliance_test.mbt`. The file is ~3200 lines with deeply nested literal expressions.
 
-## Development Status
+<!-- ## Development Status
 
 - [x] Minimal Value API and fail-fast loads entry point
 - [x] Lexer (line classification, BOM stripping, newline normalization, indentation checks)
@@ -316,7 +316,7 @@ NestedText documents must be valid UTF-8. The `loads` function takes a `String`,
 - [x] Official compliance test suite: 173 tests passing as of 2026-07-06
 - [x] Error message wording and line/column metadata aligned with official spec
 - [x] Deserialization adapter (`Deserializer`, `deserialize_str`, `deserialize_value`, `deserialize_list`)
-- [x] CLI validator (`cmd/main`) — validate `.nt` files and generate roundtrip output
+- [x] CLI validator (`cmd/main`) — validate `.nt` files and generate roundtrip output -->
 
 ## License
 
