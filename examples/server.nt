@@ -1,0 +1,7 @@
+host: localhost
+port: 8080
+debug: true
+rate_limit: 3.5
+cors:
+  - https://example.com
+  - https://app.example.com

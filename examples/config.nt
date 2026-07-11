@@ -1,0 +1,7 @@
+name: nestedtext
+version: 0.1.0
+author: OrisGo
+tags:
+  - moonbit
+  - parser
+  - serialization

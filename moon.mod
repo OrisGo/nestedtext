@@ -22,3 +22,7 @@ license = "Apache-2.0 OR MIT"
 keywords = [ "nestedtext" ]
 
 description = "A MoonBit port of the NestedText serialization format."
+
+import {
+  "moonbitlang/x@0.4.46",
+}

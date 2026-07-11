@@ -8,6 +8,92 @@ NestedText 序列化格式的 MoonBit 实现，包含解析器、生成器与类
 
 _NestedText_ 是一种注重简洁易用的人类可读数据格式。详见 [nestedtext.org](https://nestedtext.org/) 规范。
 
+## 快速开始
+
+### 作为库使用
+
+```bash
+moon add OrisGo/nestedtext
+```
+
+```mbt check
+///|
+test "quick start" {
+  match @nestedtext.loads("name: Alice\nage: 30", @nestedtext.Top::Any) {
+    Ok(Some(v)) =>
+      println(@nestedtext.dumps(v, @nestedtext.DumpOptions::default()))
+    Ok(None) => println("(empty)")
+    Err(e) => println("error: \{e.to_string()}")
+  }
+}
+```
+
+库接受 `String` 输入。你需要先读取 `.nt` 文件，再将内容传给 `loads`：
+
+```mbt nocheck
+let content = @fs.read_file_to_string("config.nt") catch {
+  IOError(msg) => { println(msg); return }
+}
+match @nestedtext.loads(content, @nestedtext.Top::Any) {
+  Ok(Some(v)) => { /* 使用 v */ }
+  Err(e) => println(e.to_string())
+}
+```
+
+> `moonbitlang/core` 目前尚未包含稳定的 `@fs` 模块。参见[文件 I/O](#文件-io)章节了解可选方案。
+
+### 作为 CLI 工具
+
+```bash
+moon run cmd/main -- examples/config.nt
+```
+
+```
+=== examples/config.nt ===
+PASS | 8 lines | 5ms | -> examples/config.nt.out
+```
+
+通过环境变量限制顶层类型：
+
+```bash
+$env:NESTEDTEXT_TOP = "list"; moon run cmd/main -- examples/data.nt
+```
+
+## 文件 I/O
+
+`@nestedtext` 库本身仅依赖 `moonbitlang/core`（稳定版），**不**引入文件 I/O 包，让你自主控制如何读取文件。
+
+读取 `.nt` 文件的可选方案：
+
+| 方案 | 状态 | 建议 |
+|------|------|------|
+| `moonbitlang/x/fs` | 实验性（`moonbitlang/x` v0.4.x） | 现在可用 — 在 native 目标上工作 |
+| `moonbitlang/core/fs` | 计划中（beta-preview，预计 2026 年 8 月） | 等待稳定版发布 |
+| 外部语言（Python 等） | 始终可用 | 通过 subprocess 或 FFI 桥接 |
+
+如果使用 `moonbitlang/x/fs`，请将其加入**应用层** `moon.pkg`（而非库依赖）：
+
+```mbt nocheck
+import {
+  "OrisGo/nestedtext" @nestedtext,
+  "moonbitlang/x/fs" @fs,
+}
+```
+
+然后读取并解析：
+
+```mbt nocheck
+let content = @fs.read_file_to_string("data.nt") catch {
+  IOError(msg) => { println(msg); return }
+}
+match @nestedtext.loads(content, @nestedtext.Top::Any) {
+  Ok(Some(v)) => println(@nestedtext.dumps(v, @nestedtext.DumpOptions::default()))
+  Err(e) => println(e.to_string())
+}
+```
+
+项目自带的 CLI（`cmd/main`）使用 `moonbitlang/x/fs` 作为参考实现。待 `@fs` 进入 core 后，CLI 将切换至稳定版，届时库可能增加便捷的 `read_file` 方法。
+
 ## 解析
 
 使用 `loads` 将 NestedText 文档解析为 `Value` 树。传入 `Top` 约束可校验顶层形状。
@@ -229,10 +315,7 @@ NestedText 文档必须是合法的 UTF-8。`loads` 接受 `String` 类型，在
 - [x] 官方合规测试集：截至 2026-07-06，173 项测试全部通过
 - [x] 错误信息措辞及行列元数据与官方规范对齐
 - [x] 反序列化适配器（`Deserializer`、`deserialize_str`、`deserialize_value`、`deserialize_list`）
-
-## TODO
-
-<!-- - Add CLI tool (blocked: MoonBit lacks mature file I/O in stable stdlib). -->
+- [x] CLI 校验器（`cmd/main`）— 校验 `.nt` 文件并生成 roundtrip 输出
 
 ## 许可证
 

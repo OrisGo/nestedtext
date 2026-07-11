@@ -8,6 +8,92 @@ NestedText serialization format parser, emitter, and typed deserialization adapt
 
 _NestedText_ is a human-readable data format focused on simplicity and ease of use. See [nestedtext.org](https://nestedtext.org/) for the specification.
 
+## Quick Start
+
+### As a library
+
+```bash
+moon add OrisGo/nestedtext
+```
+
+```mbt check
+///|
+test "quick start" {
+  match @nestedtext.loads("name: Alice\nage: 30", @nestedtext.Top::Any) {
+    Ok(Some(v)) =>
+      println(@nestedtext.dumps(v, @nestedtext.DumpOptions::default()))
+    Ok(None) => println("(empty)")
+    Err(e) => println("error: \{e.to_string()}")
+  }
+}
+```
+
+The library accepts `String` input. Read a `.nt` file first and pass its content to `loads`:
+
+```mbt nocheck
+let content = @fs.read_file_to_string("config.nt") catch {
+  IOError(msg) => { println(msg); return }
+}
+match @nestedtext.loads(content, @nestedtext.Top::Any) {
+  Ok(Some(v)) => { /* use v */ }
+  Err(e) => println(e.to_string())
+}
+```
+
+> `moonbitlang/core` does not yet include a stable `@fs` module. See [File I/O](#file-io) for options.
+
+### As a CLI tool
+
+```bash
+moon run cmd/main -- examples/config.nt
+```
+
+```
+=== examples/config.nt ===
+PASS | 8 lines | 5ms | -> examples/config.nt.out
+```
+
+Restrict the top-level shape via environment variable:
+
+```bash
+$env:NESTEDTEXT_TOP = "list"; moon run cmd/main -- examples/data.nt
+```
+
+## File I/O
+
+The `@nestedtext` library itself depends only on `moonbitlang/core` (stable). It does **not** import file I/O packages, so your own project stays in control of how files are read.
+
+Options for reading `.nt` files:
+
+| Approach | Status | Recommendation |
+|----------|--------|----------------|
+| `moonbitlang/x/fs` | Experimental (`moonbitlang/x` v0.4.x) | Use today — works on native target |
+| `moonbitlang/core/fs` | Planned (beta-preview, ~Aug 2026) | Wait for stable release |
+| External language (Python, etc.) | Always available | Bridge via subprocess or FFI |
+
+If you use `moonbitlang/x/fs`, add it to your **application** `moon.pkg` (not to the library):
+
+```mbt nocheck
+import {
+  "OrisGo/nestedtext" @nestedtext,
+  "moonbitlang/x/fs" @fs,
+}
+```
+
+Then read and parse:
+
+```mbt nocheck
+let content = @fs.read_file_to_string("data.nt") catch {
+  IOError(msg) => { println(msg); return }
+}
+match @nestedtext.loads(content, @nestedtext.Top::Any) {
+  Ok(Some(v)) => println(@nestedtext.dumps(v, @nestedtext.DumpOptions::default()))
+  Err(e) => println(e.to_string())
+}
+```
+
+The bundled CLI (`cmd/main`) uses `moonbitlang/x/fs` as a reference implementation. Once `@fs` lands in core, the CLI will switch to it and a convenience `read_file` helper may be added to the library.
+
 ## Parsing
 
 Use `loads` to parse a NestedText document into a `Value` tree. Pass a `Top` constraint to validate the top-level shape.
@@ -230,12 +316,7 @@ NestedText documents must be valid UTF-8. The `loads` function takes a `String`,
 - [x] Official compliance test suite: 173 tests passing as of 2026-07-06
 - [x] Error message wording and line/column metadata aligned with official spec
 - [x] Deserialization adapter (`Deserializer`, `deserialize_str`, `deserialize_value`, `deserialize_list`)
-
-## TODO
-
-<!-- - Add CLI tool (blocked: MoonBit lacks mature file I/O in stable stdlib). -->
-
-Complete the moon.mod, and release the package. Related Link: https://docs.moonbitlang.com/en/latest/toolchain/moon/module.html
+- [x] CLI validator (`cmd/main`) — validate `.nt` files and generate roundtrip output
 
 ## License
 

@@ -1,6 +1,8 @@
-// import {
-//   "OrisGo/nestedtext" @lib,
-// }
+import {
+  "OrisGo/nestedtext",
+  "moonbitlang/core/env",
+  "moonbitlang/x/fs",
+}
 
 options(
   "is-main": true,
