@@ -16,8 +16,6 @@ pub fn dumps(Value, DumpOptions) -> String
 
 pub fn loads(String, Top) -> Result[Value?, NestedTextError]
 
-pub fn loads_to_json(String) -> String
-
 // Errors
 
 // Types and methods
