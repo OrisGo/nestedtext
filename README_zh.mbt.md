@@ -1,5 +1,7 @@
 # OrisGo/nestedtext
 
+[English](README.mbt.md)
+
 NestedText 序列化格式的 MoonBit 实现，包含解析器、生成器与类型化反序列化适配器。
 
 > **注意**：本项目是 Rust [nested-text](https://github.com/hansstimer/nested-text) crate 的 MoonBit 移植版，沿用其 Apache-2.0 或 MIT 双许可。

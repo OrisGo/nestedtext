@@ -1,5 +1,7 @@
 # OrisGo/nestedtext
 
+[中文](README_zh.mbt.md)
+
 NestedText serialization format parser, emitter, and typed deserialization adapter implemented in MoonBit.
 
 > **Notice**: This project is a MoonBit port of the Rust [nested-text](https://github.com/hansstimer/nested-text) crate. It inherits the Apache-2.0 OR MIT dual license.
@@ -238,6 +240,8 @@ NestedText documents must be valid UTF-8. The `loads` function takes a `String`,
 ## TODO
 
 <!-- - Add CLI tool (blocked: MoonBit lacks mature file I/O in stable stdlib). -->
+
+Complete the moon.mod, and release the package. Related Link: https://docs.moonbitlang.com/en/latest/toolchain/moon/module.html
 
 ## License
 
