@@ -1,4 +1,4 @@
-﻿///|
+///|
 test "expect_string extracts string value" {
   let d = @nestedtext.Deserializer::new(@nestedtext.Value::String("hello"))
   match d.expect_string() {

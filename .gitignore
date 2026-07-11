@@ -5,3 +5,5 @@ target
 .mooncakes/
 .moonagent/
 .codex/
+.venv/
+__pycache__/

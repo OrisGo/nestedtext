@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # Matrix: type check + run tests for each backend
+  moon-check-test:
+    name: moon check & test (${{ matrix.target }})
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [wasm, wasm-gc, native]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> $GITHUB_PATH
+
+      - name: MoonBit version & update
+        run: |
+          moon version --all
+          moon update
+
+      - name: Type check
+        run: moon check --target ${{ matrix.target }}
+
+      - name: Run tests
+        run: moon test --target ${{ matrix.target }}
+
+  # Formatting check (single job, no matrix needed)
+  fmt-check:
+    name: moon fmt --check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> $GITHUB_PATH
+
+      - name: Check formatting
+        run: moon fmt --check
+
+  # Python compliance tests (using local venv)
+  python-tests:
+    name: Python compliance tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r tests/python/requirements.txt
+
+      - name: Run Python tests
+        run: python tests/python/compliance_test.py

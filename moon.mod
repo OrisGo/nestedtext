@@ -15,10 +15,10 @@ version = "0.1.0"
 
 readme = "README.mbt.md"
 
-repository = ""
+repository = "https://github.com/OrisGo/nestedtext"
 
-license = "Apache-2.0"
+license = "Apache-2.0 OR MIT"
 
-keywords = [ ]
+keywords = [ "nestedtext" ]
 
-description = ""
+description = "A MoonBit port of the NestedText serialization format."

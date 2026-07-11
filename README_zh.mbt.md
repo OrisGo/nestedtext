@@ -1,5 +1,7 @@
 # OrisGo/nestedtext
 
+[English](README.mbt.md)
+
 NestedText 序列化格式的 MoonBit 实现，包含解析器、生成器与类型化反序列化适配器。
 
 > **注意**：本项目是 Rust [nested-text](https://github.com/hansstimer/nested-text) crate 的 MoonBit 移植版，沿用其 Apache-2.0 或 MIT 双许可。
@@ -190,18 +192,12 @@ test "deserialize optional field" {
 ///|
 test "error location" {
   match @nestedtext.loads("key: value", @nestedtext.Top::Any) {
-    Ok(value) => {
-      match @nestedtext.deserialize_value(
-        value.unwrap(),
-        fn(d) { d.expect_int() },
-      ) {
-        Err(e) => @debug.assert_eq(
-          e.message,
-          "expected string, got dictionary",
-        )
+    Ok(value) =>
+      match
+        @nestedtext.deserialize_value(value.unwrap(), fn(d) { d.expect_int() }) {
+        Err(e) => @debug.assert_eq(e.message, "expected string, got dictionary")
         Ok(_) => fail("expected error")
       }
-    }
     Err(e) => fail(e.to_string())
   }
 }
