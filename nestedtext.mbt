@@ -1,8 +1,16 @@
 ///|
-/// Parse a NestedText document.
+/// Parse a NestedText document string.
 ///
-/// Empty documents return `Ok(None)` when `top` is `Any`; otherwise they are
-/// materialized as the requested empty top-level value.
+/// # Parameters
+/// * `input` — The NestedText source text.
+/// * `top` — Constrains the expected top-level shape. Pass `Top::Any` when the
+///   structure is not known ahead of time.
+///
+/// # Returns
+/// * `Ok(None)` — The document is empty and `top` is `Top::Any`.
+/// * `Ok(Some(v))` — Successful parse. The returned `Value` matches
+///   the constraint given by `top`.
+/// * `Err(e)` — A `NestedTextError` describing the parse failure.
 pub fn loads(input : String, top : Top) -> Result[Value?, NestedTextError] {
   if input.contains("\u{FFFD}") {
     let parts = input.split("\n")

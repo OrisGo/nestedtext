@@ -1,17 +1,30 @@
 ///|
 /// Options for controlling NestedText output formatting.
+///
+/// # Fields
+/// * `indent` — Number of spaces per indentation level (default: 4).
+/// * `sort_keys` — When `true`, dictionary keys are emitted in ascending
+///   string order (default: `false`).
 pub(all) struct DumpOptions {
   indent : Int
   sort_keys : Bool
 } derive(Debug)
 
 ///|
+/// Default formatting options: 4-space indent, no key sorting.
 pub fn DumpOptions::default() -> DumpOptions {
   { indent: 4, sort_keys: false }
 }
 
 ///|
-/// Serialize a Value to a NestedText string.
+/// Serialize a `Value` to a NestedText string.
+///
+/// # Parameters
+/// * `value` — The parsed NestedText value to emit.
+/// * `options` — Formatting options (indent size, key sorting).
+///
+/// # Returns
+/// A NestedText document string, including a trailing newline.
 pub fn dumps(value : Value, options : DumpOptions) -> String {
   let lines : Array[String] = []
   render_value(value, 0, options, lines)

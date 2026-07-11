@@ -5,11 +5,13 @@ pub(all) struct DeserializeError {
 } derive(Debug, Eq)
 
 ///|
+/// Create a `DeserializeError` with a free-form message.
 pub fn DeserializeError::new(message : String) -> DeserializeError {
   { message, }
 }
 
 ///|
+/// Create an error for a type mismatch (e.g. expected a list but got a string).
 pub fn DeserializeError::type_mismatch(
   expected : String,
   actual : String,
@@ -18,6 +20,7 @@ pub fn DeserializeError::type_mismatch(
 }
 
 ///|
+/// Create an error for a failed string-to-primitive conversion.
 pub fn DeserializeError::parse_error(
   value : String,
   target_type : String,
@@ -26,6 +29,7 @@ pub fn DeserializeError::parse_error(
 }
 
 ///|
+/// Create an error for a missing dictionary field.
 pub fn DeserializeError::missing_field(field_name : String) -> DeserializeError {
   { message: "missing field: \{field_name}" }
 }
@@ -37,6 +41,7 @@ pub(all) struct Deserializer {
 } derive(Debug, Eq)
 
 ///|
+/// Wrap a `Value` for typed extraction.
 pub fn Deserializer::new(value : Value) -> Deserializer {
   { value, }
 }
@@ -69,7 +74,11 @@ pub fn Deserializer::expect_string(
 
 ///|
 /// Extract the value as an `Int` by parsing the string representation.
-/// Errors if the value is not a string or parsing fails.
+///
+/// # Errors
+/// Returns `DeserializeError::type_mismatch` when the value is not a string,
+/// or `DeserializeError::parse_error` when the string cannot be parsed as
+/// an `Int`.
 pub fn Deserializer::expect_int(
   self : Deserializer,
 ) -> Result[Int, DeserializeError] {
@@ -84,7 +93,11 @@ pub fn Deserializer::expect_int(
 
 ///|
 /// Extract the value as an `Int64` by parsing the string representation.
-/// Errors if the value is not a string or parsing fails.
+///
+/// # Errors
+/// Returns `DeserializeError::type_mismatch` when the value is not a string,
+/// or `DeserializeError::parse_error` when the string cannot be parsed as
+/// an `Int64`.
 pub fn Deserializer::expect_int64(
   self : Deserializer,
 ) -> Result[Int64, DeserializeError] {
@@ -99,7 +112,11 @@ pub fn Deserializer::expect_int64(
 
 ///|
 /// Extract the value as a `Double` by parsing the string representation.
-/// Errors if the value is not a string or parsing fails.
+///
+/// # Errors
+/// Returns `DeserializeError::type_mismatch` when the value is not a string,
+/// or `DeserializeError::parse_error` when the string cannot be parsed as
+/// a `Double`.
 pub fn Deserializer::expect_double(
   self : Deserializer,
 ) -> Result[Double, DeserializeError] {
@@ -208,7 +225,14 @@ pub fn Deserializer::field_names(self : Deserializer) -> Array[String] {
 ///|
 /// Deserialize a list where each element is decoded with `f`.
 ///
-/// `f` receives a fresh `Deserializer` for every element.
+/// # Parameters
+/// * `d` — A deserializer that should wrap a `List` value.
+/// * `f` — A function that receives a fresh `Deserializer` for each element.
+///
+/// # Returns
+/// The array of decoded elements on success.
+/// Returns `DeserializeError::type_mismatch` when the underlying value is not
+/// a list.
 pub fn[T] deserialize_list(
   d : Deserializer,
   f : (Deserializer) -> Result[T, DeserializeError],
@@ -250,6 +274,10 @@ pub fn[T] Deserializer::expect_optional(
 
 ///|
 /// Convert a `Value` into a typed value using `f`.
+///
+/// # Parameters
+/// * `value` — The parsed value to deserialize.
+/// * `f` — A function that extracts the typed result from a `Deserializer`.
 pub fn[T] deserialize_value(
   value : Value,
   f : (Deserializer) -> Result[T, DeserializeError],
