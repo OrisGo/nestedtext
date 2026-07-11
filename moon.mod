@@ -19,6 +19,6 @@ repository = "https://github.com/OrisGo/nestedtext"
 
 license = "Apache-2.0 OR MIT"
 
-keywords = ["nestedtext"]
+keywords = [ "nestedtext" ]
 
 description = "A MoonBit port of the NestedText serialization format."

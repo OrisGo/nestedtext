@@ -192,18 +192,12 @@ Parse errors carry location metadata (line number, column, source line).
 ///|
 test "error location" {
   match @nestedtext.loads("key: value", @nestedtext.Top::Any) {
-    Ok(value) => {
-      match @nestedtext.deserialize_value(
-        value.unwrap(),
-        fn(d) { d.expect_int() },
-      ) {
-        Err(e) => @debug.assert_eq(
-          e.message,
-          "expected string, got dictionary",
-        )
+    Ok(value) =>
+      match
+        @nestedtext.deserialize_value(value.unwrap(), fn(d) { d.expect_int() }) {
+        Err(e) => @debug.assert_eq(e.message, "expected string, got dictionary")
         Ok(_) => fail("expected error")
       }
-    }
     Err(e) => fail(e.to_string())
   }
 }
