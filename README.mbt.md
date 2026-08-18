@@ -8,6 +8,8 @@ NestedText serialization format parser, emitter, and typed deserialization adapt
 
 _NestedText_ is a human-readable data format focused on simplicity and ease of use. See [nestedtext.org](https://nestedtext.org/) for the specification.
 
+> **Spec version**: this parser targets **NestedText v3.8** (released 2025-12-26). Compliance tests are adapted from the [official test suite](https://github.com/KenKundert/nestedtext_tests) (v3.8).
+
 ## Quick Start
 
 ### As a library
@@ -313,7 +315,7 @@ NestedText documents must be valid UTF-8. The `loads` function takes a `String`,
 - [x] Lexer (line classification, BOM stripping, newline normalization, indentation checks)
 - [x] Parser (basic block dictionaries, lists, multiline strings, multiline keys, inline values)
 - [x] Emitter (dumps, DumpOptions, render helpers)
-- [x] Official compliance test suite: 173 tests passing as of 2026-07-06
+- [x] Official compliance test suite (v3.8): 148 tests (146 in `compliance_test.mbt` + 2 deep-nesting cases in Python)
 - [x] Error message wording and line/column metadata aligned with official spec
 - [x] Deserialization adapter (`Deserializer`, `deserialize_str`, `deserialize_value`, `deserialize_list`)
 - [x] CLI validator (`cmd/main`) — validate `.nt` files and generate roundtrip output -->

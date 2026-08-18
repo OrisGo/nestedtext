@@ -8,6 +8,8 @@ NestedText 序列化格式的 MoonBit 实现，包含解析器、生成器与类
 
 _NestedText_ 是一种注重简洁易用的人类可读数据格式。详见 [nestedtext.org](https://nestedtext.org/) 规范。
 
+> **规范版本**：本解析器面向 **NestedText v3.8**（2025-12-26 发布）。合规测试改编自[官方测试套件](https://github.com/KenKundert/nestedtext_tests)（v3.8）。
+
 ## 快速开始
 
 ### 作为库使用
@@ -312,7 +314,7 @@ NestedText 文档必须是合法的 UTF-8。`loads` 接受 `String` 类型，在
 - [x] 词法分析器（行分类、BOM 剥离、换行规范化、缩进校验）
 - [x] 解析器（基础块级字典、列表、多行字符串、多行键、内联值）
 - [x] 生成器（dumps、DumpOptions、渲染辅助函数）
-- [x] 官方合规测试集：截至 2026-07-06，173 项测试全部通过
+- [x] 官方合规测试集（v3.8）：148 项（`compliance_test.mbt` 中 146 项 + Python 中 2 项深嵌套用例）
 - [x] 错误信息措辞及行列元数据与官方规范对齐
 - [x] 反序列化适配器（`Deserializer`、`deserialize_str`、`deserialize_value`、`deserialize_list`）
 - [x] CLI 校验器（`cmd/main`）— 校验 `.nt` 文件并生成 roundtrip 输出 -->

@@ -1,6 +1,6 @@
 ///|
-/// Compliance tests adapted from the official NestedText test suite.
-/// Source: https://github.com/nestedtext/nestedtext
+/// Compliance tests adapted from the official NestedText test suite (v3.8).
+/// Source: https://github.com/KenKundert/nestedtext_tests
 
 ///|
 // empty single line multiline string
@@ -3716,5 +3716,7 @@ test "compliance: straggle" {
 
 ///|
 test "compliance: summary" {
-  @debug.assert_eq(1, 1) // all 148 tests above ran as individual test cases
+  // 146 tests run here; the 2 deep-nesting cases (`moccasin`, `spillage`)
+  // are migrated to Python (tests/python/compliance_test.py) to avoid `moon fmt` OOM.
+  @debug.assert_eq(1, 1)
 }
