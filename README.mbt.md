@@ -76,9 +76,10 @@ Options for reading `.nt` files:
 If you use `moonbitlang/x/fs`, add it to your **application** `moon.pkg` (not to the library):
 
 ```mbt nocheck
+///|
 import {
-  "OrisGo/nestedtext" @nestedtext,
-  "moonbitlang/x/fs" @fs,
+  "OrisGo/nestedtext",
+  "moonbitlang/x/fs",
 }
 ```
 

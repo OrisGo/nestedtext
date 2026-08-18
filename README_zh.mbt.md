@@ -76,9 +76,10 @@ $env:NESTEDTEXT_TOP = "list"; moon run cmd/main -- examples/data.nt
 如果使用 `moonbitlang/x/fs`，请将其加入**应用层** `moon.pkg`（而非库依赖）：
 
 ```mbt nocheck
+///|
 import {
-  "OrisGo/nestedtext" @nestedtext,
-  "moonbitlang/x/fs" @fs,
+  "OrisGo/nestedtext",
+  "moonbitlang/x/fs",
 }
 ```
 
