@@ -11,7 +11,7 @@ test "loads simple dictionary" {
           ("age", @nestedtext.Value::String("30")),
         ]),
       )
-    other => fail("unexpected result: \{to_repr(other)}")
+    other => fail("unexpected result: \{Repr(other)}")
   }
 }
 
@@ -32,7 +32,7 @@ test "loads nested list under dictionary" {
           ),
         ]),
       )
-    other => fail("unexpected result: \{to_repr(other)}")
+    other => fail("unexpected result: \{Repr(other)}")
   }
 }
 
@@ -44,6 +44,6 @@ test "reports indentation location" {
       assert_true(err.lineno == Some(1))
       assert_true(err.colno == Some(1))
     }
-    Ok(value) => fail("expected indentation error, got \{to_repr(value)}")
+    Ok(value) => fail("expected indentation error, got \{Repr(value)}")
   }
 }
