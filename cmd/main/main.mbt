@@ -67,7 +67,7 @@ fn print_error_ctx(content : String, e : @nestedtext.NestedTextError) -> Unit {
 }
 
 ///|
-fn get_line(content : String, lineno : Int) -> String {
+fn get_line(content : String, lineno : Int32) -> String {
   let lines = content.split("\n").to_array()
   for i, view in lines {
     if i + 1 == lineno {
@@ -78,8 +78,8 @@ fn get_line(content : String, lineno : Int) -> String {
 }
 
 ///|
-fn spaces(n : Int) -> String {
-  let buf = StringBuilder::new()
+fn spaces(n : Int32) -> String {
+  let buf = StringBuilder()
   for _ in 0..<n {
     buf.write_char(' ')
   }
@@ -87,8 +87,8 @@ fn spaces(n : Int) -> String {
 }
 
 ///|
-fn count_lines(content : String) -> Int {
-  content.split("\n").length()
+fn count_lines(content : String) -> Int32 {
+  content.split("\n").count()
 }
 
 ///|

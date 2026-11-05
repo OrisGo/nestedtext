@@ -1,4 +1,5 @@
 ///|
+#derive(Eq)
 priv enum LineKind {
   ListItem
   DictItem
@@ -7,13 +8,13 @@ priv enum LineKind {
   InlineDict
   InlineList
   Unrecognized
-} derive(Eq)
+}
 
 ///|
 priv struct Line {
   kind : LineKind
-  lineno : Int
-  depth : Int
+  lineno : Int32
+  depth : Int32
   key : String?
   value : String?
   text : String
@@ -22,7 +23,7 @@ priv struct Line {
 ///|
 priv struct Lexer {
   lines : Array[Line]
-  mut pos : Int
+  mut pos : Int32
 }
 
 ///|
@@ -48,7 +49,7 @@ fn Lexer::from_string(input : String) -> Result[Lexer, NestedTextError] {
     }
     lines.push(classify_line(rest, depth, lineno + 1, raw))
   }
-  Ok({ lines, pos: 0 })
+  Ok({ lines, pos: 0, })
 }
 
 ///|
@@ -68,7 +69,7 @@ fn Lexer::next_line(self : Lexer) -> Line? {
 }
 
 ///|
-fn Lexer::next_is(self : Lexer, depth : Int, kind : LineKind) -> Bool {
+fn Lexer::next_is(self : Lexer, depth : Int32, kind : LineKind) -> Bool {
   match self.peek() {
     Some(line) => line.depth == depth && line.kind == kind
     None => false
@@ -76,7 +77,7 @@ fn Lexer::next_is(self : Lexer, depth : Int, kind : LineKind) -> Bool {
 }
 
 ///|
-fn count_leading_spaces(line : String) -> Int {
+fn count_leading_spaces(line : String) -> Int32 {
   for count = 0, i = 0; i < line.length(); {
     if line[i] == ' ' {
       continue count + 1, i + 1
@@ -89,7 +90,7 @@ fn count_leading_spaces(line : String) -> Int {
 }
 
 ///|
-fn check_indentation(raw : String, lineno : Int) -> NestedTextError? {
+fn check_indentation(raw : String, lineno : Int32) -> NestedTextError? {
   for colno, ch in raw.iter2() {
     if ch == ' ' {
       continue
@@ -130,8 +131,8 @@ fn check_indentation(raw : String, lineno : Int) -> NestedTextError? {
 ///|
 fn classify_line(
   rest : String,
-  depth : Int,
-  lineno : Int,
+  depth : Int32,
+  lineno : Int32,
   raw : String,
 ) -> Line {
   if rest.has_prefix("- ") || rest == "-" {
@@ -210,7 +211,7 @@ fn classify_line(
         text: raw,
       }
     None =>
-      { kind: Unrecognized, lineno, depth, key: None, value: None, text: raw }
+      { kind: Unrecognized, lineno, depth, key: None, value: None, text: raw, }
   }
 }
 

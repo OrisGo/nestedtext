@@ -91,7 +91,7 @@ test "dumps sorted keys" {
     ("z", @nestedtext.Value::String("last")),
     ("a", @nestedtext.Value::String("first")),
   ])
-  let opts = @nestedtext.DumpOptions::{ indent: 4, sort_keys: true }
+  let opts = @nestedtext.DumpOptions::{ indent: 4, sort_keys: true, }
   let result = @nestedtext.dumps(value, opts)
   @debug.assert_eq(result, "a: first\nz: last\n")
 }

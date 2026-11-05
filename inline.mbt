@@ -1,20 +1,20 @@
 ///|
 priv struct InlineParser {
   input : String
-  mut pos : Int
-  lineno : Int
-  colno_offset : Int
+  mut pos : Int32
+  lineno : Int32
+  colno_offset : Int32
   line_text : String
 }
 
 ///|
 fn InlineParser::parse(
   input : String,
-  lineno : Int,
-  colno_offset : Int,
+  lineno : Int32,
+  colno_offset : Int32,
   line_text : String,
 ) -> Result[Value, NestedTextError] {
-  let parser = { input, pos: 0, lineno, colno_offset, line_text }
+  let parser = { input, pos: 0, lineno, colno_offset, line_text, }
   match parser.parse_value() {
     Err(err) => Err(err)
     Ok(value) => {

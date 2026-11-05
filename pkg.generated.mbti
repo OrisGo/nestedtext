@@ -19,22 +19,28 @@ pub fn loads(String, Top) -> Result[Value?, NestedTextError]
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct DeserializeError {
   message : String
-} derive(Eq, @debug.Debug)
+}
+pub fn DeserializeError::equal(Self, Self) -> Bool
 pub fn DeserializeError::missing_field(String) -> Self
 pub fn DeserializeError::new(String) -> Self
+pub fn DeserializeError::not_equal(Self, Self) -> Bool
 pub fn DeserializeError::parse_error(String, String) -> Self
+pub fn DeserializeError::to_repr(Self) -> @debug.Repr
 pub fn DeserializeError::type_mismatch(String, String) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Deserializer {
   value : Value
-} derive(Eq, @debug.Debug)
+}
 pub fn Deserializer::as_value(Self) -> Value
+pub fn Deserializer::equal(Self, Self) -> Bool
 pub fn Deserializer::expect_bool(Self) -> Result[Bool, DeserializeError]
 pub fn Deserializer::expect_dict(Self) -> Result[Array[(String, Value)], DeserializeError]
 pub fn Deserializer::expect_double(Self) -> Result[Double, DeserializeError]
-pub fn Deserializer::expect_int(Self) -> Result[Int, DeserializeError]
+pub fn Deserializer::expect_int(Self) -> Result[Int32, DeserializeError]
 pub fn Deserializer::expect_int64(Self) -> Result[Int64, DeserializeError]
 pub fn Deserializer::expect_list(Self) -> Result[Array[Value], DeserializeError]
 pub fn[T] Deserializer::expect_optional(Self, (Self) -> Result[T, DeserializeError]) -> Result[T?, DeserializeError]
@@ -43,13 +49,18 @@ pub fn Deserializer::field_names(Self) -> Array[String]
 pub fn Deserializer::get_field(Self, String) -> Result[Self, DeserializeError]
 pub fn Deserializer::has_field(Self, String) -> Bool
 pub fn Deserializer::new(Value) -> Self
+pub fn Deserializer::not_equal(Self, Self) -> Bool
+pub fn Deserializer::to_repr(Self) -> @debug.Repr
 
+#derive(@debug.Debug)
 pub(all) struct DumpOptions {
-  indent : Int
+  indent : Int32
   sort_keys : Bool
-} derive(@debug.Debug)
+}
 pub fn DumpOptions::default() -> Self
+pub fn DumpOptions::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ErrorKind {
   InvalidIndentation
   TabInIndentation
@@ -62,43 +73,57 @@ pub(all) enum ErrorKind {
   InvalidInlineCharacter
   TrailingContent
   DeserializationError
-} derive(Eq, @debug.Debug)
+}
+pub fn ErrorKind::equal(Self, Self) -> Bool
+pub fn ErrorKind::not_equal(Self, Self) -> Bool
+pub fn ErrorKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct NestedTextError {
   kind : ErrorKind
   message : String
-  lineno : Int?
-  colno : Int?
+  lineno : Int32?
+  colno : Int32?
   line : String?
-} derive(Eq, @debug.Debug)
-pub fn NestedTextError::at(ErrorKind, String, Int, Int, String) -> Self
+}
+pub fn NestedTextError::at(ErrorKind, String, Int32, Int32, String) -> Self
+pub fn NestedTextError::equal(Self, Self) -> Bool
 pub fn NestedTextError::new(ErrorKind, String) -> Self
+pub fn NestedTextError::not_equal(Self, Self) -> Bool
+pub fn NestedTextError::to_repr(Self) -> @debug.Repr
 pub fn NestedTextError::to_string(Self) -> String
-pub fn NestedTextError::with_colno(Self, Int) -> Self
+pub fn NestedTextError::with_colno(Self, Int32) -> Self
 pub fn NestedTextError::with_line(Self, String) -> Self
-pub fn NestedTextError::with_lineno(Self, Int) -> Self
+pub fn NestedTextError::with_lineno(Self, Int32) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Top {
   Dict
   List
   String
   Any
-} derive(Eq, @debug.Debug)
+}
+pub fn Top::equal(Self, Self) -> Bool
+pub fn Top::not_equal(Self, Self) -> Bool
+pub fn Top::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Value {
   String(String)
   List(Array[Value])
   Dict(Array[(String, Value)])
-} derive(Eq, @debug.Debug)
+}
 pub fn Value::as_dict(Self) -> Array[(String, Self)]?
 pub fn Value::as_list(Self) -> Array[Self]?
 pub fn Value::as_string(Self) -> String?
+pub fn Value::equal(Self, Self) -> Bool
 pub fn Value::get(Self, String) -> Self?
 pub fn Value::is_dict(Self) -> Bool
 pub fn Value::is_list(Self) -> Bool
 pub fn Value::is_string(Self) -> Bool
+pub fn Value::not_equal(Self, Self) -> Bool
+pub fn Value::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 
 // Traits
-

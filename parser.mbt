@@ -1,19 +1,19 @@
 ///|
 priv struct Parser {
   lexer : Lexer
-  indent_stack : Array[Int]
-  all_indent_levels : Array[Int]
+  indent_stack : Array[Int32]
+  all_indent_levels : Array[Int32]
 }
 
 ///|
 fn Parser::new(lexer : Lexer) -> Parser {
-  { lexer, indent_stack: [], all_indent_levels: [0] }
+  { lexer, indent_stack: [], all_indent_levels: [0], }
 }
 
 ///|
 fn Parser::read_value(
   self : Parser,
-  depth : Int,
+  depth : Int32,
 ) -> Result[Value?, NestedTextError] {
   match self.lexer.peek() {
     None => Ok(None)
@@ -92,7 +92,7 @@ fn Parser::read_value(
 ///|
 fn Parser::read_dict(
   self : Parser,
-  depth : Int,
+  depth : Int32,
 ) -> Result[Value, NestedTextError] {
   let pairs : Array[(String, Value)] = []
   let seen_keys : Array[String] = []
@@ -198,7 +198,7 @@ fn Parser::read_dict(
 ///|
 fn Parser::read_list(
   self : Parser,
-  depth : Int,
+  depth : Int32,
 ) -> Result[Value, NestedTextError] {
   let items : Array[Value] = []
   for ;; {
@@ -241,7 +241,7 @@ fn Parser::read_list(
 ///|
 fn Parser::read_string(
   self : Parser,
-  depth : Int,
+  depth : Int32,
 ) -> Result[Value, NestedTextError] {
   let parts : Array[String] = []
   while self.lexer.next_is(depth, StringItem) {
@@ -268,7 +268,7 @@ fn Parser::read_string(
 }
 
 ///|
-fn Parser::read_key(self : Parser, depth : Int) -> String {
+fn Parser::read_key(self : Parser, depth : Int32) -> String {
   let parts : Array[String] = []
   while self.lexer.next_is(depth, KeyItem) {
     let line = self.lexer.next_line().unwrap()
@@ -280,7 +280,7 @@ fn Parser::read_key(self : Parser, depth : Int) -> String {
 ///|
 fn Parser::read_indented_value(
   self : Parser,
-  parent_depth : Int,
+  parent_depth : Int32,
 ) -> Result[Value, NestedTextError] {
   match self.lexer.peek() {
     Some(line) =>
@@ -306,7 +306,7 @@ fn Parser::read_indented_value(
 ///|
 fn Parser::check_no_indented_content(
   self : Parser,
-  parent_depth : Int,
+  parent_depth : Int32,
 ) -> Result[Unit, NestedTextError] {
   match self.lexer.peek() {
     Some(next) =>

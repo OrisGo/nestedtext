@@ -9,9 +9,16 @@
 /// * `String` — The document must be a single string scalar. An empty document
 ///   yields the empty string `""`.
 /// * `Any` — The document may be any type. An empty document yields `None`.
+#derive(Debug, Eq)
 pub(all) enum Top {
   Dict
   List
   String
   Any
-} derive(Debug, Eq)
+}
+
+///|
+pub extend Top with @debug.Debug::{to_repr}
+
+///|
+pub extend Top with Eq::{equal, not_equal}

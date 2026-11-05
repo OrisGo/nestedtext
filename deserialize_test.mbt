@@ -254,7 +254,7 @@ test "field_names returns empty for non-dict" {
 test "deserialize_str parses simple dict to typed tuple" {
   fn parse_person(
     d : @nestedtext.Deserializer,
-  ) -> Result[(String, Int), @nestedtext.DeserializeError] {
+  ) -> Result[(String, Int32), @nestedtext.DeserializeError] {
     match d.get_field("name") {
       Ok(name_d) =>
         match name_d.expect_string() {
@@ -286,7 +286,7 @@ test "deserialize_str parses simple dict to typed tuple" {
 test "deserialize_str deserializes list of numbers" {
   fn parse_numbers(
     d : @nestedtext.Deserializer,
-  ) -> Result[Array[Int], @nestedtext.DeserializeError] {
+  ) -> Result[Array[Int32], @nestedtext.DeserializeError] {
     @nestedtext.deserialize_list(d, fn(d2) { d2.expect_int() })
   }
   let input = "- 1\n- 2\n- 3"
@@ -301,7 +301,7 @@ test "deserialize_str deserializes list of numbers" {
 test "deserialize_str handles empty document" {
   fn parse_opt(
     d : @nestedtext.Deserializer,
-  ) -> Result[Int?, @nestedtext.DeserializeError] {
+  ) -> Result[Int32?, @nestedtext.DeserializeError] {
     d.expect_optional(fn(d2) { d2.expect_int() })
   }
   match @nestedtext.deserialize_str("", @nestedtext.Top::Any, parse_opt) {
@@ -314,7 +314,7 @@ test "deserialize_str handles empty document" {
 test "deserialize_str reports deserialization errors" {
   fn parse_int(
     d : @nestedtext.Deserializer,
-  ) -> Result[Int, @nestedtext.DeserializeError] {
+  ) -> Result[Int32, @nestedtext.DeserializeError] {
     d.expect_int()
   }
   match
@@ -328,7 +328,7 @@ test "deserialize_str reports deserialization errors" {
 test "deserialize_str reports parse error on invalid string" {
   fn parse_int(
     d : @nestedtext.Deserializer,
-  ) -> Result[Int, @nestedtext.DeserializeError] {
+  ) -> Result[Int32, @nestedtext.DeserializeError] {
     d.expect_int()
   }
   match @nestedtext.deserialize_str("> nope", @nestedtext.Top::Any, parse_int) {
@@ -345,7 +345,7 @@ test "deserialize_value deserializes typed value" {
   ])
   fn point(
     d : @nestedtext.Deserializer,
-  ) -> Result[(Int, Int), @nestedtext.DeserializeError] {
+  ) -> Result[(Int32, Int32), @nestedtext.DeserializeError] {
     match d.get_field("x") {
       Ok(xd) =>
         match xd.expect_int() {

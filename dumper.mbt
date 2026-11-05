@@ -5,15 +5,19 @@
 /// * `indent` — Number of spaces per indentation level (default: 4).
 /// * `sort_keys` — When `true`, dictionary keys are emitted in ascending
 ///   string order (default: `false`).
+#derive(Debug)
 pub(all) struct DumpOptions {
-  indent : Int
+  indent : Int32
   sort_keys : Bool
-} derive(Debug)
+}
+
+///|
+pub extend DumpOptions with @debug.Debug::{to_repr}
 
 ///|
 /// Default formatting options: 4-space indent, no key sorting.
 pub fn DumpOptions::default() -> DumpOptions {
-  { indent: 4, sort_keys: false }
+  { indent: 4, sort_keys: false, }
 }
 
 ///|
@@ -38,7 +42,7 @@ pub fn dumps(value : Value, options : DumpOptions) -> String {
 ///|
 fn render_value(
   value : Value,
-  depth : Int,
+  depth : Int32,
   options : DumpOptions,
   lines : Array[String],
 ) -> Unit {
@@ -50,7 +54,7 @@ fn render_value(
 }
 
 ///|
-fn render_string(s : String, depth : Int, lines : Array[String]) -> Unit {
+fn render_string(s : String, depth : Int32, lines : Array[String]) -> Unit {
   let indent = " ".repeat(depth)
   if s.is_empty() {
     lines.push(indent + ">")
@@ -64,7 +68,7 @@ fn render_string(s : String, depth : Int, lines : Array[String]) -> Unit {
 ///|
 fn render_list(
   items : Array[Value],
-  depth : Int,
+  depth : Int32,
   options : DumpOptions,
   lines : Array[String],
 ) -> Unit {
@@ -88,7 +92,7 @@ fn render_list(
 ///|
 fn render_dict(
   pairs : Array[(String, Value)],
-  depth : Int,
+  depth : Int32,
   options : DumpOptions,
   lines : Array[String],
 ) -> Unit {
@@ -171,7 +175,7 @@ fn value_needs_multiline(s : String) -> Bool {
 }
 
 ///|
-fn key_cmp(a : String, b : String) -> Int {
+fn key_cmp(a : String, b : String) -> Int32 {
   if a > b {
     1
   } else if a < b {

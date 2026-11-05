@@ -24,6 +24,7 @@
 ///   value.
 /// * `DeserializationError` — A typed-deserialization step failed. The
 ///   accompanying message provides the detail.
+#derive(Debug, Eq)
 pub(all) enum ErrorKind {
   InvalidIndentation
   TabInIndentation
@@ -36,7 +37,13 @@ pub(all) enum ErrorKind {
   InvalidInlineCharacter
   TrailingContent
   DeserializationError
-} derive(Debug, Eq)
+}
+
+///|
+pub extend ErrorKind with @debug.Debug::{to_repr}
+
+///|
+pub extend ErrorKind with Eq::{equal, not_equal}
 
 ///|
 /// A parse or deserialization error with optional source-location context.
@@ -47,13 +54,20 @@ pub(all) enum ErrorKind {
 /// * `lineno` — The 1-based line number where the error occurred (if known).
 /// * `colno` — The 1-based column number where the error occurred (if known).
 /// * `line` — The text of the offending line (if available).
+#derive(Debug, Eq)
 pub(all) struct NestedTextError {
   kind : ErrorKind
   message : String
-  lineno : Int?
-  colno : Int?
+  lineno : Int32?
+  colno : Int32?
   line : String?
-} derive(Debug, Eq)
+}
+
+///|
+pub extend NestedTextError with @debug.Debug::{to_repr}
+
+///|
+pub extend NestedTextError with Eq::{equal, not_equal}
 
 ///|
 /// Create an error without location information.
@@ -61,7 +75,7 @@ pub fn NestedTextError::new(
   kind : ErrorKind,
   message : String,
 ) -> NestedTextError {
-  { kind, message, lineno: None, colno: None, line: None }
+  { kind, message, lineno: None, colno: None, line: None, }
 }
 
 ///|
@@ -69,18 +83,18 @@ pub fn NestedTextError::new(
 pub fn NestedTextError::at(
   kind : ErrorKind,
   message : String,
-  lineno : Int,
-  colno : Int,
+  lineno : Int32,
+  colno : Int32,
   line : String,
 ) -> NestedTextError {
-  { kind, message, lineno: Some(lineno), colno: Some(colno), line: Some(line) }
+  { kind, message, lineno: Some(lineno), colno: Some(colno), line: Some(line), }
 }
 
 ///|
 /// Set or replace the line number on an existing error.
 pub fn NestedTextError::with_lineno(
   self : NestedTextError,
-  lineno : Int,
+  lineno : Int32,
 ) -> NestedTextError {
   {
     kind: self.kind,
@@ -95,7 +109,7 @@ pub fn NestedTextError::with_lineno(
 /// Set or replace the column number on an existing error.
 pub fn NestedTextError::with_colno(
   self : NestedTextError,
-  colno : Int,
+  colno : Int32,
 ) -> NestedTextError {
   {
     kind: self.kind,

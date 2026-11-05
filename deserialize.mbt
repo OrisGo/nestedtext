@@ -1,8 +1,15 @@
 ///|
 /// Error returned when deserialization of a `Value` into a typed target fails.
+#derive(Debug, Eq)
 pub(all) struct DeserializeError {
   message : String
-} derive(Debug, Eq)
+}
+
+///|
+pub extend DeserializeError with @debug.Debug::{to_repr}
+
+///|
+pub extend DeserializeError with Eq::{equal, not_equal}
 
 ///|
 /// Create a `DeserializeError` with a free-form message.
@@ -16,7 +23,7 @@ pub fn DeserializeError::type_mismatch(
   expected : String,
   actual : String,
 ) -> DeserializeError {
-  { message: "expected \{expected}, got \{actual}" }
+  { message: "expected \{expected}, got \{actual}", }
 }
 
 ///|
@@ -25,20 +32,27 @@ pub fn DeserializeError::parse_error(
   value : String,
   target_type : String,
 ) -> DeserializeError {
-  { message: "cannot parse '\{value}' as \{target_type}" }
+  { message: "cannot parse '\{value}' as \{target_type}", }
 }
 
 ///|
 /// Create an error for a missing dictionary field.
 pub fn DeserializeError::missing_field(field_name : String) -> DeserializeError {
-  { message: "missing field: \{field_name}" }
+  { message: "missing field: \{field_name}", }
 }
 
 ///|
 /// A typed view over a parsed `Value` that extracts MoonBit values.
+#derive(Debug, Eq)
 pub(all) struct Deserializer {
   value : Value
-} derive(Debug, Eq)
+}
+
+///|
+pub extend Deserializer with @debug.Debug::{to_repr}
+
+///|
+pub extend Deserializer with Eq::{equal, not_equal}
 
 ///|
 /// Wrap a `Value` for typed extraction.
@@ -73,15 +87,15 @@ pub fn Deserializer::expect_string(
 }
 
 ///|
-/// Extract the value as an `Int` by parsing the string representation.
+/// Extract the value as an `Int32` by parsing the string representation.
 ///
 /// # Errors
 /// Returns `DeserializeError::type_mismatch` when the value is not a string,
 /// or `DeserializeError::parse_error` when the string cannot be parsed as
-/// an `Int`.
+/// an `Int32`.
 pub fn Deserializer::expect_int(
   self : Deserializer,
-) -> Result[Int, DeserializeError] {
+) -> Result[Int32, DeserializeError] {
   match self.expect_string() {
     Ok(s) =>
       try @string.from_str(s.trim()) |> Ok catch {

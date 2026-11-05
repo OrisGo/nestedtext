@@ -3,11 +3,18 @@
 ///
 /// NestedText has string scalars, lists, and dictionaries. Dictionaries keep
 /// insertion order by storing key-value pairs in an array.
+#derive(Debug, Eq)
 pub(all) enum Value {
   String(String)
   List(Array[Value])
   Dict(Array[(String, Value)])
-} derive(Debug, Eq)
+}
+
+///|
+pub extend Value with @debug.Debug::{to_repr}
+
+///|
+pub extend Value with Eq::{equal, not_equal}
 
 ///|
 /// Returns `true` when the value is a `String`.
