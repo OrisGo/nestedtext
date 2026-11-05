@@ -11,7 +11,7 @@
 
 name = "OrisGo/nestedtext"
 
-version = "0.1.1"
+version = "0.1.3"
 
 readme = "README.mbt.md"
 
