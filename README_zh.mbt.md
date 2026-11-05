@@ -160,7 +160,7 @@ test "serialize with sorted keys" {
     ("z", @nestedtext.Value::String("last")),
     ("a", @nestedtext.Value::String("first")),
   ])
-  let opts = @nestedtext.DumpOptions::{ indent: 4, sort_keys: true }
+  let opts = @nestedtext.DumpOptions::{ indent: 4, sort_keys: true, }
   @debug.assert_eq(@nestedtext.dumps(value, opts), "a: first\nz: last\n")
 }
 
@@ -204,7 +204,7 @@ test "roundtrip" {
 test "deserialize typed struct" {
   fn person(
     d : @nestedtext.Deserializer,
-  ) -> Result[(String, Int), @nestedtext.DeserializeError] {
+  ) -> Result[(String, Int32), @nestedtext.DeserializeError] {
     match d.get_field("name") {
       Ok(nd) =>
         match nd.expect_string() {
@@ -262,7 +262,7 @@ test "deserialize optional field" {
 | 方法 | 目标类型 | 说明 |
 |------|---------|------|
 | `expect_string()` | `String` | 直接提取 |
-| `expect_int()` | `Int` | 解析十进制字符串 |
+| `expect_int()` | `Int32` | 解析十进制字符串 |
 | `expect_int64()` | `Int64` | 解析十进制字符串 |
 | `expect_double()` | `Double` | 解析十进制字符串 |
 | `expect_bool()` | `Bool` | 接受 `true`/`True`/`TRUE`/`yes`/`Yes`/`YES`（以及等价的 false/no 形式）|

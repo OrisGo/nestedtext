@@ -160,7 +160,7 @@ test "serialize with sorted keys" {
     ("z", @nestedtext.Value::String("last")),
     ("a", @nestedtext.Value::String("first")),
   ])
-  let opts = @nestedtext.DumpOptions::{ indent: 4, sort_keys: true }
+  let opts = @nestedtext.DumpOptions::{ indent: 4, sort_keys: true, }
   @debug.assert_eq(@nestedtext.dumps(value, opts), "a: first\nz: last\n")
 }
 
@@ -204,7 +204,7 @@ Unlike serde, this library does **not** use traits or derive macros. Instead, de
 test "deserialize typed struct" {
   fn person(
     d : @nestedtext.Deserializer,
-  ) -> Result[(String, Int), @nestedtext.DeserializeError] {
+  ) -> Result[(String, Int32), @nestedtext.DeserializeError] {
     match d.get_field("name") {
       Ok(nd) =>
         match nd.expect_string() {
@@ -262,7 +262,7 @@ test "deserialize optional field" {
 | Method | Target Type | Notes |
 |--------|------------|-------|
 | `expect_string()` | `String` | Identity extraction |
-| `expect_int()` | `Int` | Parses decimal representation |
+| `expect_int()` | `Int32` | Parses decimal representation |
 | `expect_int64()` | `Int64` | Parses decimal representation |
 | `expect_double()` | `Double` | Parses decimal representation |
 | `expect_bool()` | `Bool` | Accepts `true`/`True`/`TRUE`/`yes`/`Yes`/`YES` (and `false`/`no` equivalents) |
